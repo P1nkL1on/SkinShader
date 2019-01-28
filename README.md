@@ -1,0 +1,2 @@
+# shader
+qt-shadering algorythm
