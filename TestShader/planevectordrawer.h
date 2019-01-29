@@ -12,8 +12,8 @@ public:
     int mash = 2;
 private:
 
-    double minGraduationValue = 0;
-    double maxGraduationValue = 100;
+    double minGraduationValue = -100;
+    double maxGraduationValue = 200;
 
     int minColor = 0;
     int maxColor = 255;

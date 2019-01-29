@@ -25,7 +25,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
 {
     QPainter qp(this);
     cs->smooth(D, DS);
-    //DS = D.changeSize(500, 200, 2);
+    //DS = D.changeSize(400, 400, 2);
     p->paint(&qp, D, 50, 20);
     p->paint(&qp, DS, 50 + imageSize * p->mash, 20);
     qp.end();

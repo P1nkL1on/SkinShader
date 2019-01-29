@@ -8,22 +8,22 @@ CrossShading::CrossShading()
 
 void CrossShading::smooth(const PlaneVector &v, PlaneVector &to) const
 {
-    const double r = 1.28;
-    const double delt = (r>=1.0)? (38.2 * r - 26.5) : (70.5 * r - 46.9);
-//    const double alph1 = 15.4 * r - 13.8;
-//    const double alph2 = 3.0 * r - 3.09;
-//    double alpha = (alph1 < alph2)? alph1 : alph2;
-//    if (alpha >= 1.0) alpha = 1.0;
+    const double r = 1;
+    double sigma = (r>=1.0)? (38.2 * r - 26.5) : (70.5 * r - 46.9);
+
     const int rad = 31;
+    const double numSigma = 2.5;
 
 
     //for (int i = -rad; i < rad; ++i)
-    //    qDebug() << i << "->" << getGaussian(delt, i);
+    //    qDebug() << i << "->" << getGaussian(sigma, i);
 
-    const double xvec = 1.0, yvec = .0;
+    const double xvec = 1.0, yvec = .5;
     double L = sqrt(xvec * xvec + yvec * yvec);
     double xvec1 = xvec / L;
     double yvec1 = yvec / L;
+
+
 
 
     for (int x = 0; x < to.width(); ++x)
@@ -31,13 +31,12 @@ void CrossShading::smooth(const PlaneVector &v, PlaneVector &to) const
 
             double summ = 0;
             double summWeigth = 0;
-            for (int i = -rad; i <= rad; ++i){
-                const double weigth = getGaussian(delt, i);//std::max(0.0, 1.0 - i * i * 1.0 / rad / rad);
+            for (int i = 0; i <= rad; ++i){
+                const double val = ( i - rad / 2.0) * numSigma / (rad + 1);
+                const double weigth = getGaussian(sigma, val);
                 summWeigth += weigth;
                 summ += weigth * getInVec(v, x, y, xvec1, yvec1, i);
             }
-            //if (v.getValue(x,y) != summ/summWeigth)
-            //qDebug() << v.getValue(x,y) << " --> " << summ/summWeigth;
             to.setValue(summ / summWeigth, x, y);
         }
 }
@@ -59,9 +58,9 @@ double CrossShading::getInVec(const PlaneVector &v, const int x, const int y, co
     return v.getValue(getX, getY);
 }
 
-double CrossShading::getGaussian(double delt, double x) const
+double CrossShading::getGaussian(double sigma, double x) const
 {
-    //qDebug() << x << "->" << res;
-    return .5/(M_PI * delt) * exp(-(x*x)/(2*delt*delt));;
+    double xs = x / sigma;
+    return exp(-.5 * xs * xs);
 }
 

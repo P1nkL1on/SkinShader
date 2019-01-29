@@ -19,6 +19,7 @@ private slots:
     void testGettingInt();
     void testNoneInter();
     void testNearestInter();
+    void testBilinearInter();
 };
 
 #endif // PLANEVECTORTESTS_H

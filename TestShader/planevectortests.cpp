@@ -68,3 +68,16 @@ void PlaneVectorTests::testNearestInter()
     QVERIFY(p.getValue(0.7, 0.3, 1) == 1.0);
     QVERIFY(p.getValue(0.99, 0.99, 1) == 3.0);
 }
+
+void PlaneVectorTests::testBilinearInter()
+{
+    PlaneVector p = PlaneVector(2, 2);
+    for (int i = 0; i < 4; ++i)
+        p.setValue(i * 1.0, i % 2, i / 2);
+
+    QVERIFY(p.getValue(0, 0.5, 2) == 1.0);
+    QVERIFY(p.getValue(0.5, 0, 2) == .5);
+    QVERIFY(p.getValue(1.0, 0.5, 2) == 2.0);
+    QVERIFY(p.getValue(.5, 1.0, 2) == 2.5);
+    QVERIFY(p.getValue(.5, .5, 2) == 1.5);
+}
