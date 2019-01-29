@@ -23,9 +23,9 @@ private:
     void runTests() const;
 
     PlaneVectorDrawer *p = new PlaneVectorDrawer();
-    const int imageSize = 300;
+    const int imageSize = 250;
+    bool everSaved = false;
     PlaneVector D = PlaneVector::testPlaneVector(imageSize, imageSize);
-    PlaneVector DS = PlaneVector(imageSize, imageSize);
     CrossShading *cs = new CrossShading();
 protected:
     void paintEvent(QPaintEvent *e);

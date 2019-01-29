@@ -18,6 +18,13 @@ void PlaneVector::setValue(const double value, const int x, const int y)
     m_values[y * width() + x] = value;
 }
 
+void PlaneVector::setValue(const double value, const int number)
+{
+    if (number < 0 || number > m_values.size() - 1)
+        throw std::out_of_range("Out of range in coordinate");
+    m_values[number] = value;
+}
+
 double PlaneVector::getValue(const int x, const int y) const
 {
     assertCoordinates(x,y);
@@ -90,6 +97,15 @@ PlaneVector PlaneVector::testPlaneVector(const int wid, const int hei)
             res.setValue(100.0, x, y);//(100.0 - ((((x + y) % 2)? ((x + y) / 2) : (100 - (x + y) / 2)) * .2), x, y);
         }
     return res;
+}
+
+void PlaneVector::summ(const PlaneVector &a, const double ka, const PlaneVector &b, const double kb, PlaneVector &res)
+{
+    if (a.width() != b.width() || a.height() != b.height())
+        throw std::out_of_range("Not same sizes!");
+    const int size = a.width() * a.height();
+    for (int i = 0; i < size; ++i)
+        res.setValue(ka * a.m_values[i] + kb * b.m_values[i], i);
 }
 
 void PlaneVector::assertCoordinates(const int x, const int y) const

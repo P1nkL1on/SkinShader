@@ -3,12 +3,14 @@
 
 #include "planevector.h"
 #include "qpainter.h"
+#include "qimage.h"
 
 class PlaneVectorDrawer
 {
 public:
     PlaneVectorDrawer();
     void paint(QPainter *qp, const PlaneVector &vec, const int x = 0, const int y = 0) const;
+    QImage paint(const PlaneVector &vec) const;
     int mash = 2;
 private:
 

@@ -23,11 +23,28 @@ void MainWindow::runTests() const
 
 void MainWindow::paintEvent(QPaintEvent *e)
 {
+    if (everSaved)return;
+    PlaneVector DS = PlaneVector(imageSize, imageSize);
+    PlaneVector DS1 = PlaneVector(imageSize, imageSize);
+    cs->smooth(D, DS, 1);
+    cs->smooth(D, DS1, 2);
+
+    PlaneVector Dsharp = PlaneVector(imageSize, imageSize);
+    PlaneVector::summ(D, 1.5, DS1, -.5, Dsharp);
+
     QPainter qp(this);
-    cs->smooth(D, DS);
-    //DS = D.changeSize(400, 400, 2);
     p->paint(&qp, D, 50, 20);
-    p->paint(&qp, DS, 50 + imageSize * p->mash, 20);
+    p->paint(&qp, DS, 60 + imageSize * p->mash, 20);
+    p->paint(&qp, DS1, 70 + imageSize * p->mash * 2, 20);
+    p->paint(&qp, Dsharp, 50, 30 + imageSize * p->mash);
     qp.end();
 
+//    everSaved = true;
+//    const QImage orig = p->paint(D);//
+//    const QImage blur = p->paint(DS);//
+
+//    orig.save("image.png");
+//    blur.save("imageBlured.png");
+
+//    qDebug() << "done";
 }
