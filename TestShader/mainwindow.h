@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "planevectordrawer.h"
+#include "planevectortests.h"
 #include "crossshading.h"
+#include "planevectordrawer.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -18,6 +20,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    void runTests() const;
 
     PlaneVectorDrawer *p = new PlaneVectorDrawer();
     const int imageSize = 300;

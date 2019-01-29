@@ -9,7 +9,7 @@ class PlaneVectorDrawer
 public:
     PlaneVectorDrawer();
     void paint(QPainter *qp, const PlaneVector &vec, const int x = 0, const int y = 0) const;
-    int mash = 3;
+    int mash = 2;
 private:
 
     double minGraduationValue = 0;

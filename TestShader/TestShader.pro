@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     planevector.cpp \
     planevectordrawer.cpp \
-    crossshading.cpp
+    crossshading.cpp \
+    planevectortests.cpp
 
 HEADERS += \
         mainwindow.h \
     planevector.h \
     planevectordrawer.h \
-    crossshading.h
+    crossshading.h \
+    planevectortests.h
 
 FORMS += \
         mainwindow.ui

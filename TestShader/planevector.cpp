@@ -12,24 +12,25 @@ PlaneVector::PlaneVector(const int width, const int height)
 
 void PlaneVector::setValue(const double value, const int x, const int y)
 {
-    if (!assertCoordinates(x, y))
-        return;
+    assertCoordinates(x,y);
     m_values[y * width() + x] = value;
 }
 
 double PlaneVector::getValue(const int x, const int y) const
 {
-    if (!assertCoordinates(x, y))
-        return 0.0;
+    assertCoordinates(x,y);
     return m_values[y * width() + x];
 }
 
 double PlaneVector::getValue(const float x, const float y, const int flagInterpolation) const
 {
     switch (flagInterpolation){
-
+        case 1:
+            return getValue(std::round(x), std::round(y));
+        case 2:
+            return bilinearInterpolateCoordinate(x, y);
         default:
-            return getValue((int)x, (int)y);
+            return getValue(std::floor(x), std::floor(y));
     }
 }
 
@@ -43,18 +44,34 @@ int PlaneVector::height() const
     return m_height;
 }
 
-bool PlaneVector::assertCoordinates(const int x, const int y) const
+PlaneVector PlaneVector::changeSize(const int wid, const int hei, const int flagInterpolation) const
 {
-    return assertCoordinates((float)x, (float)y);
+    PlaneVector res = PlaneVector(wid, hei);
+    const float xS = (width() - 1) * 1.0 / wid;
+    const float yS = (height() - 1) * 1.0 / hei;
+    for (int i = 0; i < wid; ++i)
+        for (int j = 0; j < hei; ++j)
+            res.setValue(getValue(i * xS, j * yS, flagInterpolation), i, j);
+    return res;
 }
 
-bool PlaneVector::assertCoordinates(const float x, const float y) const
+double PlaneVector::bilinearInterpolateCoordinate(const float x, const float y) const
 {
-    Q_ASSERT(x >= 0.0 && x < width());
-    Q_ASSERT(y >= 0.0 && y < height());
-    return true;
+    const int pX = std::floor(x);
+    const int pY = std::floor(y);
+    return bilinearInterpolate(x - pX, y - pY,
+        getValue(pX, pY), getValue(pX + 1, pY), getValue(pX, pY + 1), getValue(pX + 1, pY+1));
 }
 
+double PlaneVector::bilinearInterpolate(const float x, const float y, const double a00, const double a10, const double a01, const double a11)
+{
+    if (x < 0 || x > 1 || y < 0 || y > 1)
+        throw std::out_of_range("Interpolation coordinate is out of [0..1]");
+    return  a11 * x * y
+            + a01 * (1.0 - x) * y
+            + a10 * x * (1.0 - y)
+            + a00 * (1.0 - x) * (1.0 - y);
+}
 
 PlaneVector PlaneVector::testPlaneVector(const int wid, const int hei)
 {
@@ -69,4 +86,14 @@ PlaneVector PlaneVector::testPlaneVector(const int wid, const int hei)
             res.setValue(100.0, x, y);//(100.0 - ((((x + y) % 2)? ((x + y) / 2) : (100 - (x + y) / 2)) * .2), x, y);
         }
     return res;
+}
+
+void PlaneVector::assertCoordinates(const int x, const int y) const
+{
+    const bool xAccept = (x >= 0) && (x < width());
+    const bool yAccept = (y >= 0) && (y < height());
+    if (xAccept && yAccept)
+        return;
+
+    throw std::out_of_range("Out of range in coordinate");
 }
