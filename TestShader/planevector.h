@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include "QImage"
 
 class PlaneVector
 {
@@ -13,6 +14,10 @@ public:
 //    const static int interpolationBecubic = 3;
 
     PlaneVector(const int width, const int height);
+    PlaneVector(const QImage &image);
+    PlaneVector(const QString &imagePath);
+
+    void setParamsFromQImage (const QImage &image);
 
     void setValue(const double value, const int x, const int y);
     void setValue(const double value, const int number);

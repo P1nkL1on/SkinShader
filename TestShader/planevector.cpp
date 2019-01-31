@@ -12,6 +12,42 @@ PlaneVector::PlaneVector(const int width, const int height)
     m_height = height;
 }
 
+PlaneVector::PlaneVector(const QImage &image)
+{
+    setParamsFromQImage(image);
+}
+
+PlaneVector::PlaneVector(const QString &imagePath)
+{
+    setParamsFromQImage(QImage(imagePath));
+}
+
+void PlaneVector::setParamsFromQImage(const QImage &image)
+{
+    if (image.isNull())
+        return;
+    m_height = image.height();
+    m_width = image.width();
+    m_values = std::vector<double>(m_width * m_height);
+    std::fill(m_values.begin(), m_values.end(), 0.0);
+
+    int pixelIndex = 0;
+    QVector<QRgb> v = image.colorTable(); // returns a list of colors contained in the image's color table.
+    //for ( QVector<QRgb>::const_iterator it = v.begin(), itE = v.end(); it != itE; ++it )
+    //{
+
+    for (int i = 0; i < width(); ++i)
+        for (int j = 0; j < height(); ++j){
+            QColor clrCurrent = image.pixelColor(i, j);
+            //QColor clrCurrent( *it );
+
+            setValue((clrCurrent.red() + clrCurrent.blue() + clrCurrent.green()) / 7.65,
+                     i, j);
+            pixelIndex ++;
+        }
+    //}
+}
+
 void PlaneVector::setValue(const double value, const int x, const int y)
 {
     assertCoordinates(x,y);
@@ -34,12 +70,12 @@ double PlaneVector::getValue(const int x, const int y) const
 double PlaneVector::getValue(const float x, const float y, const int flagInterpolation) const
 {
     switch (flagInterpolation){
-        case 1:
-            return getValue(std::round(x), std::round(y));
-        case 2:
-            return bilinearInterpolateCoordinate(x, y);
-        default:
-            return getValue(std::floor(x), std::floor(y));
+    case 1:
+        return getValue(std::round(x), std::round(y));
+    case 2:
+        return bilinearInterpolateCoordinate(x, y);
+    default:
+        return getValue(std::floor(x), std::floor(y));
     }
 }
 
@@ -70,8 +106,8 @@ double PlaneVector::bilinearInterpolateCoordinate(const float x, const float y) 
     const int pY = std::floor(y);
     //qDebug() << pX << pY << width() << height() << (x - pX)<<( y - pY);
     return bilinearInterpolate(x - pX, y - pY,
-        getValue(pX, pY), getValue(std::min(pX + 1, width() - 1), pY),
-        getValue(pX, std::min(pY + 1, height() - 1)), getValue(std::min(pX + 1, width() - 1), std::min(pY + 1, height() - 1)));
+                               getValue(pX, pY), getValue(std::min(pX + 1, width() - 1), pY),
+                               getValue(pX, std::min(pY + 1, height() - 1)), getValue(std::min(pX + 1, width() - 1), std::min(pY + 1, height() - 1)));
 }
 
 double PlaneVector::bilinearInterpolate(const float x, const float y, const double a00, const double a10, const double a01, const double a11)

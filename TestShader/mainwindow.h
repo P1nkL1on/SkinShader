@@ -25,7 +25,8 @@ private:
     PlaneVectorDrawer *p = new PlaneVectorDrawer();
     const int imageSize = 250;
     bool everSaved = false;
-    PlaneVector D = PlaneVector::testPlaneVector(imageSize, imageSize);
+    PlaneVector D = PlaneVector("rock2.jpeg");
+    //PlaneVector::testPlaneVector(imageSize, imageSize);
     CrossShading *cs = new CrossShading();
 protected:
     void paintEvent(QPaintEvent *e);

@@ -11,11 +11,11 @@ public:
     PlaneVectorDrawer();
     void paint(QPainter *qp, const PlaneVector &vec, const int x = 0, const int y = 0) const;
     QImage paint(const PlaneVector &vec) const;
-    int mash = 2;
+    int mash = 1;
 private:
 
-    double minGraduationValue = -100;
-    double maxGraduationValue = 200;
+    double minGraduationValue = 0;
+    double maxGraduationValue = 100.0;
 
     int minColor = 0;
     int maxColor = 255;
