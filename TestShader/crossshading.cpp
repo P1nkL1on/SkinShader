@@ -27,13 +27,55 @@ void CrossShading::smooth(const PlaneVector &v, PlaneVector &to, const int inter
             double summWeigth = 0;
             for (int i = 0; i <= rad; ++i){
                 const double val = ( i - rad / 2.0) * numSigma / (rad + 1);
-                const double weigth = getGaussian(sigma, val);
+                const double weigth = getGaussian(1, val);
                 summWeigth += weigth;
                 summ += weigth * getInVec(v, x, y, xvec1, yvec1, i - rad / 2.0, interpolation);
             }
             to.setValue(summ / summWeigth, x, y);
         }
 }
+
+void CrossShading::blurInDirection(
+        const PlaneVector &originalImage, PlaneVector &resultImage,
+        const double r, const double directionX, const double directionY,
+        const int interpolationType) const
+{
+    const double sigma = (r >= 1.0)? (38.2 * r - 26.5) : (70.5 * r - 46.9);
+    const int rad = 31;
+    const double numSigma = 2.5;
+
+    double directionLength = sqrt(directionX * directionX + directionY * directionY);
+    double xComponent = directionX / directionLength;
+    double yComponent = directionY / directionLength;
+
+    for (int x = 0; x < originalImage.width(); ++x)
+        for (int y = 0; y < originalImage.height(); ++y){
+            double summ = 0;
+            double summWeigth = 0;
+            for (int i = 0; i <= rad; ++i){
+                const double val = ( i - rad / 2.0) * numSigma / (rad + 1);
+                const double weigth = getGaussian(1, val);
+                summWeigth += weigth;
+                summ += weigth
+                        // a interpolated color
+                        * getInVec(originalImage, x, y,
+                                   xComponent, yComponent, i - rad / 2.0,
+                                   interpolationType);
+            }
+            resultImage.setValue(summ / summWeigth, x, y);
+        }
+}
+
+void CrossShading::sharpenInDirection(
+        const PlaneVector &originalImage, PlaneVector &resultImage,
+        const double r, const double directionX, const double directionY,
+        const int interpolationType) const
+{
+    const double alpha = std::min(1.0, std::min(15.4*r-13.8, 3.09*(r-1.0)));
+    blurInDirection(originalImage, resultImage, r, directionX, directionY, interpolationType);
+    PlaneVector::summ(originalImage, (1 + alpha), resultImage, alpha, resultImage);
+}
+
 
 double CrossShading::getC(const int center, const double tan, const int number, const int max) const
 {
