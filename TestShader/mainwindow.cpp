@@ -39,10 +39,9 @@ void MainWindow::paintEvent(QPaintEvent *e)
    // p->paint(&qp, DS, 60 + D.width() * p->mash, 20);
 //    p->paint(&qp, DS1, 70 + imageSize * p->mash * 2, 20);
 
-    cs->blurInDirection(D, DS, 1.0, 5.0, -4.0, 2);
-    cs->sharpenInDirection(DS, DS1, 1.0, -4.0, 5.0, 2);
+    cs->blurInDirection(D, DS, .73, 5.0, -4.0, 2);
 
-    p->paint(&qp, DS1, 60 + D.width() * p->mash, 20);
+    p->paint(&qp, DS, 60 + D.width() * p->mash, 20);
     qp.end();
 
 //    everSaved = true;
