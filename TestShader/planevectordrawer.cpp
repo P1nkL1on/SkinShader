@@ -1,5 +1,4 @@
 #include "planevectordrawer.h"
-
 PlaneVectorDrawer::PlaneVectorDrawer()
 {
 

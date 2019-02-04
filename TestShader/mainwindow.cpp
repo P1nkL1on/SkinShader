@@ -26,22 +26,16 @@ void MainWindow::paintEvent(QPaintEvent *e)
     if (everSaved)return;
     PlaneVector D = PlaneVector("rock2.jpeg");
     D = D.changeSize(200, 300, 2);
-    PlaneVector DS = PlaneVector(D.width(), D.height());
-    PlaneVector DS1 = PlaneVector(D.width(), D.height());
-//    cs->smooth(D, DS, 2);
-//    cs->smooth(D, DS1, 2);
 
-//    PlaneVector Dsharp = PlaneVector(D.width(), D.height());
-//    PlaneVector::summ(D, 1.9, DS1, -.9, Dsharp);
+    PlaneVector DS = PlaneVector(D.width(), D.height());
 
     QPainter qp(this);
     p->paint(&qp, D, 50, 20);
-   // p->paint(&qp, DS, 60 + D.width() * p->mash, 20);
-//    p->paint(&qp, DS1, 70 + imageSize * p->mash * 2, 20);
 
-    cs->blurInDirection(D, DS, .73, 5.0, -4.0, 2);
-
-    p->paint(&qp, DS, 60 + D.width() * p->mash, 20);
+    for (int i = 0; i < 8; ++i){
+        cs->blurCross(D, DS, .73 + .1 * i, 1.0, .0, 2);
+        p->paint(&qp, DS, 60 + D.width() * p->mash * (i+1), 20);
+    }
     qp.end();
 
 //    everSaved = true;

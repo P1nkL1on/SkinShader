@@ -37,9 +37,11 @@ void CrossShading::smooth(const PlaneVector &v, PlaneVector &to, const int inter
 
 void CrossShading::blurInDirection(
         const PlaneVector &originalImage, PlaneVector &resultImage,
-        const double r, const double directionX, const double directionY,
+        const double s, const double directionX, const double directionY,
         const int interpolationType) const
 {
+    const double r = std::min(1.4, std::max(.7, s));
+
     const double sigma = (r >= 1.0)? (38.2 * r - 26.5) : (70.5 * r - 46.9);
     const double alpha = std::min(1.0, std::min(15.4*r-13.8, 3.09*(r-1.0)));
 
@@ -60,32 +62,24 @@ void CrossShading::blurInDirection(
                 gausWs[i] = getGaussian(1, val);
                 summWeigth += gausWs[i];
             }
-//                summ += weigth
-//                        * getInVec(originalImage, x, y,
-//                                   xComponent, yComponent, i - rad / 2.0,
-//                                   interpolationType);
-
             double resVal = 0.0;
             for (int i = 0; i <= rad; ++i){
                 const double sx = ( i - rad / 2.0) * numSigma / (rad + 1) * sigma;
                 const double colorK = (((i == rad/2)? (1.0 - alpha) : (0.0)) + alpha * gausWs[i] / summWeigth);
-                resVal += getInVec(originalImage, x, y, xComponent, yComponent, sx, 2) * colorK;
+                resVal += getInVec(originalImage, x, y, xComponent, yComponent, sx, interpolationType) * colorK;
             }
-            //qDebug() << resVal;
             resultImage.setValue(resVal, x, y);
         }
 }
 
-//void CrossShading::sharpenInDirection(
-//        const PlaneVector &originalImage, PlaneVector &resultImage,
-//        const double r, const double directionX, const double directionY,
-//        const int interpolationType) const
-//{
-//    const double alpha = std::min(1.0, std::min(15.4*r-13.8, 3.09*(r-1.0)));
-//    blurInDirection(originalImage, resultImage, r, directionX, directionY, interpolationType);
-//    PlaneVector::summ(originalImage, (1 + alpha), resultImage, alpha, resultImage);
-//}
-
+void CrossShading::blurCross(const PlaneVector &originalImage, PlaneVector &resultImage,
+                             const double r, const double directX, const double directY,
+                             const int interpolationType) const
+{
+    const double boost = .1;
+    blurInDirection(originalImage, resultImage, r + boost, directX, directY, interpolationType);
+    blurInDirection(originalImage, resultImage, r - boost, directY, directX, interpolationType);
+}
 
 double CrossShading::getC(const int center, const double tan, const int number, const int max) const
 {
