@@ -22,10 +22,13 @@ public:
                         const float lineWidth = 1.0, const QVector<QColor> triangleColors = {Qt::red, Qt::green, Qt::blue}) const;
     void drawTriangleUVmonocolor(QPainter *painter, const EigenFuncs::Vector2D &v1, const EigenFuncs::Vector2D &v2, const EigenFuncs::Vector2D &v3,
                         const float lineWidth = 1.0, const QColor triangleColor = Qt::gray) const;
+
+    void debugTriangle(QPainter *painter, const EigenFuncs::Mat33D &mat) const;
+    void debugTriangle(QPainter *painter, const EigenFuncs::Mat23D &mat) const;
 private:
     QVector2D translateVec3(const EigenFuncs::Vector3D &v) const;
     QVector2D translateVec2(const EigenFuncs::Vector2D &v) const;
-    QVector2D m_centerG = QVector2D(350, 400);
+    QVector2D m_centerG = QVector2D(550, 400);
     QVector2D m_centerUV = QVector2D(20, 20);
     double m_scaling = 1.0;
     int m_sizeUV = 150;

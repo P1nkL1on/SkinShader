@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
 void MainWindow::paintEvent(QPaintEvent *e)
 {
     QPainter qp(this);
-    d.setScale(50.0);
+    d.setScale(150.0);
     //d.drawModel(&qp, t);
     c.test(&qp, &d);
     qp.end();

@@ -65,8 +65,11 @@ void esDrawer::drawTriangleG(QPainter *painter,
         from(0, 1) = 0.0;
         Vector3D from2 = from;
         from2(0,0) = 0.0;
+        Vector3D from3 = from;
+        from3(0,2) = 0.0;
         drawLine(painter, proect, from, Qt::green);
-        drawLine(painter, from2, from, Qt::blue);
+        drawLine(painter, from2, from, Qt::red);
+        drawLine(painter, from3, from, Qt::blue);
 
     }
     drawTriDotTriangle(painter, planeC, lineWidth, triangleColors);
@@ -90,6 +93,22 @@ void esDrawer::drawTriangleUVmonocolor(QPainter *painter, const Vector2D &v1, co
     drawTriangleUV(painter, v1,v2,v3, lineWidth, {triangleColor, triangleColor, triangleColor});
 }
 
+void esDrawer::debugTriangle(QPainter *painter, const Mat33D &mat) const
+{
+    drawTriangleG(painter,
+                  makeVector3D(mat(0,0), mat(1,0), mat(2,0)),
+                  makeVector3D(mat(0,1), mat(1,1), mat(2,1)),
+                  makeVector3D(mat(0,2), mat(1,2), mat(2,2)));
+}
+
+void esDrawer::debugTriangle(QPainter *painter, const Mat23D &mat) const
+{
+    drawTriangleG(painter,
+               makeVector3D(mat(0,0), mat(1,0), .0),
+               makeVector3D(mat(0,1), mat(1,1), .0),
+               makeVector3D(mat(0,2), mat(1,2), .0));
+}
+
 QVector2D esDrawer::translateVec3(const Vector3D &v) const
 {
     return QVector2D((int)(m_scaling * (v(0,0) + m_zToXProect * v(0,2))) + m_centerG.x(),
@@ -102,6 +121,7 @@ QVector2D esDrawer::translateVec2(const Vector2D &v) const
                      (int)(m_sizeUV * v(0,1)) + m_centerUV.y());
 }
 
+int colorSwap = 0;
 void esDrawer::drawTriDotTriangle(QPainter *painter, const QVector<QVector2D> &dots, const float lineWidth, QVector<QColor> triangleColors) const
 {
     if (triangleColors.length() != 3 || dots.length() != 3)
@@ -110,7 +130,9 @@ void esDrawer::drawTriDotTriangle(QPainter *painter, const QVector<QVector2D> &d
     p << QPoint(dots[0].x(), dots[0].y())
         << QPoint(dots[1].x(), dots[1].y())
         << QPoint(dots[2].x(), dots[2].y());
-    painter->setBrush(QColor(triangleColors[0].red(),triangleColors[0].green(), triangleColors[0].blue(), 50));
+    const int cl = colorSwap % 3;
+    ++colorSwap;
+    painter->setBrush(QColor(triangleColors[cl].red(),triangleColors[cl].green(), triangleColors[cl].blue(), 50));
     painter->drawPolygon(p);
     for (int from = 0; from < 3; ++from){
         const int to = (from + 1) % 3;
