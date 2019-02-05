@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-01-15T12:05:24
+# Project created by QtCreator 2019-02-05T12:52:18
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TestShader
+TARGET = EigenStratcher
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -23,24 +23,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
+include(../../QT-serious/modules/Eigen/Eigen.pri)
+
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    planevector.cpp \
-    planevectordrawer.cpp \
-    crossshading.cpp \
-    planevectortests.cpp \
-    point.cpp \
-    trianglespeller.cpp
+    esmodel.cpp \
+    esdrawer.cpp \
+    escalculator.cpp
 
 HEADERS += \
         mainwindow.h \
-    planevector.h \
-    planevectordrawer.h \
-    crossshading.h \
-    planevectortests.h \
-    point.h \
-    trianglespeller.h
+    esmodel.h \
+    esfuncs.h \
+    esdrawer.h \
+    escalculator.h
 
 FORMS += \
         mainwindow.ui

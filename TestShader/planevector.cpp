@@ -144,6 +144,21 @@ void PlaneVector::summ(const PlaneVector &a, const double ka, const PlaneVector 
         res.setValue(ka * a.m_values[i] + kb * b.m_values[i], i);
 }
 
+void PlaneVector::setValue(const double value, const Point xy)
+{
+    setValue(value, xy.x(), xy.y());
+}
+
+double PlaneVector::getValue(const Point xy) const
+{
+    return getValue(xy.x(), xy.y());
+}
+
+double PlaneVector::getValue(const FPoint xy, const int flagInterpolation) const
+{
+    getValue(xy.x(), xy.y(), flagInterpolation);
+}
+
 void PlaneVector::assertCoordinates(const int x, const int y) const
 {
     const bool xAccept = (x >= 0) && (x < width());

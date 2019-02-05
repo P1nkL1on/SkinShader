@@ -3,6 +3,7 @@
 
 #include "planevector.h"
 
+
 class CrossShading
 {
 public:
