@@ -19,6 +19,7 @@ using Vector2D = Vector2<double>;
 using Vector3D = Vector3<double>;
 using Mat33D = Mat33<double>;
 using Mat23D = Eigen::Matrix<double,2,3>;
+using Mat22D = Eigen::Matrix<double,2,2>;
 
 template <typename Scalar>
 inline void traceVector3 (const Vector3<Scalar> &v){
