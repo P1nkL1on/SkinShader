@@ -32,7 +32,7 @@ private:
     QVector2D m_centerUV = QVector2D(20, 20);
     double m_scaling = 1.0;
     int m_sizeUV = 150;
-    double m_zToXProect = -.5;
+    double m_zToXProect = -.5 * .0;
     double m_zToYProect = .5;
 
     void drawTriDotTriangle(QPainter *painter, const QVector<QVector2D> &dots, const float lineWidth, QVector<QColor> triangleColors) const;
