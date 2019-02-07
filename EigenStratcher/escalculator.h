@@ -7,9 +7,11 @@ class esCalculator
 {
 public:
     esCalculator() = default;
+    void test0() const;
     void test(QPainter *qp, esDrawer *dr) const;
 private:
     void calculateE1E2 (const EigenFuncs::Mat23D &orig, EigenFuncs::Mat22D &res) const;
+    Eigen::Matrix<double, 3, 1> centrateMatrix(const EigenFuncs::Mat33D &orig, EigenFuncs::Mat33D &res) const;
 };
 
 #endif // ESCALCULATOR_H

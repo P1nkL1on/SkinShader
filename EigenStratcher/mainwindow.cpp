@@ -20,6 +20,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
     QPainter qp(this);
     d.setScale(150.0);
     //d.drawModel(&qp, t);
+//    c.test0();
     c.test(&qp, &d);
     qp.end();
 }
