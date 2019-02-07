@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "escalculator.h"
+#include "escalculatortests.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +17,7 @@ public:
     ~MainWindow();
 
 private:
+    void runTests() const;
     Ui::MainWindow *ui;
     esModel t = esModel::createTestModel();
     esDrawer d = esDrawer();

@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->runTests();
 }
 
 MainWindow::~MainWindow()
@@ -23,4 +24,10 @@ void MainWindow::paintEvent(QPaintEvent *e)
 //    c.test0();
     c.test(&qp, &d);
     qp.end();
+}
+
+void MainWindow::runTests() const
+{
+    esCalculatorTests esCTests;
+    QTest::qExec(&esCTests);
 }
