@@ -42,11 +42,11 @@ void esDrawer::drawSystemG(QPainter *painter, const double scale) const
     drawLine(painter, zero, zeroZ, Qt::blue);
 }
 
-void esDrawer::drawLine(QPainter *painter, const Vector3D &v1, const Vector3D &v2, const QColor &color) const
+void esDrawer::drawLine(QPainter *painter, const Vector3D &v1, const Vector3D &v2, const QColor &color, const float width) const
 {
     const auto from = translateVec3(v1);
     const auto to = translateVec3(v2);
-    painter->setPen(QPen(color));
+    painter->setPen(QPen(color, width));
     painter->drawLine(from.x(), from.y(), to.x(), to.y());
 }
 
@@ -93,12 +93,13 @@ void esDrawer::drawTriangleUVmonocolor(QPainter *painter, const Vector2D &v1, co
     drawTriangleUV(painter, v1,v2,v3, lineWidth, {triangleColor, triangleColor, triangleColor});
 }
 
-void esDrawer::debugTriangle(QPainter *painter, const Mat33D &mat) const
+void esDrawer::debugTriangle(QPainter *painter, const Mat33D &mat, const QColor &fillColor, const float width) const
 {
-    drawTriangleG(painter,
+    drawTriangleGmonocolor(painter,
                   makeVector3D(mat(0,0), mat(1,0), mat(2,0)),
                   makeVector3D(mat(0,1), mat(1,1), mat(2,1)),
-                  makeVector3D(mat(0,2), mat(1,2), mat(2,2)));
+                  makeVector3D(mat(0,2), mat(1,2), mat(2,2)),
+                  width, fillColor);
 }
 
 void esDrawer::debugTriangle(QPainter *painter, const Mat23D &mat) const

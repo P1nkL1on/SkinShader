@@ -59,20 +59,46 @@ void esCalculator::test(QPainter *qp, esDrawer *dr) const
     calculateClosestR(Q, R);
 
     V_gR = R * V_g;
+    Mat22D e_R, e;
+    calculateE1E2(V_uv, e);
+    calculateE1E2(V_gR, e_R);
 
-    dr->debugTriangle(qp, V_g);
-    dr->debugTriangle(qp, V_uv);
-    dr->debugTriangle(qp, V_gR);
+    coutMatrix("v_gR 3x3", V_gR);
+    coutMatrix("e1e2 __ R 2x2", e_R);
 
-    coutEdgeLengths("v_g", V_g);
-    coutEdgeLengths("v_gR", V_gR);
-    coutEdgeLengths("v_uv", V_uv);
+    Mat22D T;
+    calculateT(e, e_R, T);
 
-    coutMatrix("v_gR", V_gR);
-    coutMatrix("v_uv", V_uv);
+    JacobiSVD<MatrixXd> svd(T, ComputeFullU | ComputeFullV);
+    cout << endl << svd.singularValues() << endl;
+
+    Mat22D S = removeLastRow(Q * R.transpose()) * svd.matrixV();
+    coutMatrix("S = Q * R^t", Q * R.transpose());
+    coutMatrix("S = Q * R^t * V", S);
+
+
+//    dr->debugTriangle(qp, V_g);
+    dr->debugTriangle(qp, V_uv, QColor(50, 80, 240, 150));
+    dr->debugTriangle(qp, V_gR, QColor(200, 200, 200, 50));
+
+//    coutEdgeLengths("v_g", V_g);
+//    coutEdgeLengths("v_gR", V_gR);
+//    coutEdgeLengths("v_uv", V_uv);
+
+//    coutMatrix("v_gR", V_gR);
+//    coutMatrix("v_uv", V_uv);
+    dr->drawLine(qp, makeVector3D(0, 0, 0), makeVector3D(S(0,0), S(1,0), 0), QColor(30, 30, 200), 3);
+    dr->drawLine(qp, makeVector3D(0, 0, 0), makeVector3D(S(0,1), S(1,1), 0), Qt::red, 3);
 }
 
-void esCalculator::calculateE1E2(const Mat23D &orig, Mat22D &res) const
+Mat22D esCalculator::removeLastRow(const Mat33D &mat) const
+{
+    Mat22D res;
+    res << mat(0,0), mat(0,1), mat(1,0), mat(1,1);
+    return res;
+}
+
+void esCalculator::calculateE1E2(const MatrixXd &orig, Mat22D &res) const
 {
     res << orig(0,1) - orig(0,0), orig(0,2) - orig(0,0),
            orig(1,1) - orig(1,0), orig(1,2) - orig(1,0);
@@ -107,6 +133,11 @@ void esCalculator::calculateQ(const Mat33D &V_g, const Mat33D &V_uv, Mat33D &res
 {
 //    resQ = V_uv * V_g.inverse();
     resQ = V_uv * V_g.completeOrthogonalDecomposition().pseudoInverse();
+}
+
+void esCalculator::calculateT(const Mat22D &e, const Mat22D &e_R, Mat22D &resT) const
+{
+    resT = e_R * e.completeOrthogonalDecomposition().pseudoInverse();
 }
 
 void esCalculator::calculateClosestR(const Mat33D &Q, Mat33D &resR) const

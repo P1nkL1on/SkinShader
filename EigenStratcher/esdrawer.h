@@ -13,7 +13,7 @@ public:
 
     void drawModel(QPainter *painter, const esModel &model) const;
     void drawSystemG(QPainter *painter, const double scale) const;
-    void drawLine(QPainter *painter, const EigenFuncs::Vector3D &v1, const EigenFuncs::Vector3D &v2, const QColor &color = Qt::red ) const;
+    void drawLine(QPainter *painter, const EigenFuncs::Vector3D &v1, const EigenFuncs::Vector3D &v2, const QColor &color = Qt::red , const float width = 1) const;
     void drawTriangleG(QPainter *painter, const EigenFuncs::Vector3D &v1, const EigenFuncs::Vector3D &v2, const EigenFuncs::Vector3D &v3,
                        const float lineWidth = 1.0, const QVector<QColor> triangleColors = {Qt::red, Qt::green, Qt::blue}) const;
     void drawTriangleGmonocolor(QPainter *painter, const EigenFuncs::Vector3D &v1, const EigenFuncs::Vector3D &v2, const EigenFuncs::Vector3D &v3,
@@ -23,7 +23,7 @@ public:
     void drawTriangleUVmonocolor(QPainter *painter, const EigenFuncs::Vector2D &v1, const EigenFuncs::Vector2D &v2, const EigenFuncs::Vector2D &v3,
                         const float lineWidth = 1.0, const QColor triangleColor = Qt::gray) const;
 
-    void debugTriangle(QPainter *painter, const EigenFuncs::Mat33D &mat) const;
+    void debugTriangle(QPainter *painter, const EigenFuncs::Mat33D &mat, const QColor &fillColor = Qt::gray, const float width = 1.0) const;
     void debugTriangle(QPainter *painter, const EigenFuncs::Mat23D &mat) const;
 private:
     QVector2D translateVec3(const EigenFuncs::Vector3D &v) const;
