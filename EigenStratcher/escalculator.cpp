@@ -79,7 +79,7 @@ void esCalculator::test(QPainter *qp, esDrawer *dr) const
 
 //    dr->debugTriangle(qp, V_g);
     dr->debugTriangle(qp, V_uv, QColor(50, 80, 240, 150));
-    dr->debugTriangle(qp, V_gR, QColor(200, 200, 200, 50));
+    dr->debugTriangle(qp, V_gR, QColor(200, 200, 0, 150));
 
 //    coutEdgeLengths("v_g", V_g);
 //    coutEdgeLengths("v_gR", V_gR);
@@ -87,8 +87,14 @@ void esCalculator::test(QPainter *qp, esDrawer *dr) const
 
 //    coutMatrix("v_gR", V_gR);
 //    coutMatrix("v_uv", V_uv);
-    dr->drawLine(qp, makeVector3D(0, 0, 0), makeVector3D(S(0,0), S(1,0), 0), QColor(30, 30, 200), 3);
-    dr->drawLine(qp, makeVector3D(0, 0, 0), makeVector3D(S(0,1), S(1,1), 0), Qt::red, 3);
+    const double uNorm = S.col(0).norm(),
+                 vNorm = S.col(1).norm();
+
+    // haha!
+    //cout << endl << uNorm * svd.singularValues()(0,0) << "  " << vNorm * svd.singularValues()(1,0)<< endl;
+
+    dr->drawLine(qp, makeVector3D(0, 0, 0), makeVector3D(S(0,0) / uNorm, S(1,0) / uNorm, 0), QColor(30, 30, 200), 3);
+    dr->drawLine(qp, makeVector3D(0, 0, 0), makeVector3D(S(0,1) / vNorm, S(1,1) / vNorm, 0), Qt::red, 3);
 }
 
 Mat22D esCalculator::removeLastRow(const Mat33D &mat) const
