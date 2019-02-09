@@ -3,212 +3,318 @@ using namespace std;
 using namespace Eigen;
 using namespace EigenFuncs;
 
-bool esCalculatorTests::compareMatrices33D(const Mat33D &a, const Mat33D &b) const
+bool EsCalculatorTests::isEqualMatrices(const Matrix3d &a, const Matrix3d &b) const
 {
-    const Mat33D dif = a - b;
-    for (int r = 0; r < 3; ++r)
-        for (int c = 0; c < 3; ++c){
-            const double difEl = a(r,c) - b(r,c);
-            if (difEl > eps || difEl < -eps)
-                return false;
-        }
-    return true;
-}
-
-bool esCalculatorTests::isMatrix33DinUV(const Mat33D &mat) const
-{
-    for (int c = 0; c < 3; ++c){
-        if (mat(2, c) > eps || mat(2, c) < -eps)
+    const Matrix3d dif = a - b;
+    for (int c = 0; c < 3; ++c)
+        if (abs(dif.col(c).norm()) > eps)
             return false;
-    }
     return true;
 }
 
-void esCalculatorTests::caluclateEdgeLength(const Mat33D &mat, double &edge1, double &edge2) const
+bool EsCalculatorTests::isTriangleStackLyingInUv(const Matrix3d &triangleStack) const
 {
-    edge1 = (mat.col(1) - mat.col(0)).norm();
-    edge2 = (mat.col(2) - mat.col(0)).norm();
+    return abs(triangleStack.row(2).norm()) <= eps;
 }
 
-bool esCalculatorTests::compareTriangleEdges(const Mat33D &a, const Mat33D &b) const
+void EsCalculatorTests::edgeLengths(const Matrix3d &triangleStack, double &edge1Length, double &edge2Length) const
+{
+    edge1Length = (triangleStack.col(1) - triangleStack.col(0)).norm();
+    edge2Length = (triangleStack.col(2) - triangleStack.col(0)).norm();
+}
+
+
+bool EsCalculatorTests::isEqualTrianglesEdgeLengths(const Matrix3d &triangleStack1, const Matrix3d &triangleStack2) const
 {
     double ae1, ae2, be1, be2;
-    caluclateEdgeLength(a, ae1, ae2);
-    caluclateEdgeLength(b, be1, be2);
+    edgeLengths(triangleStack1, ae1, ae2);
+    edgeLengths(triangleStack2, be1, be2);
 
     const double e1d = ae1 - be1,
                  e2d = ae2 - be2;
-    if (e1d > eps || e1d < -eps)
-        return false;
-    if (e2d > eps || e2d < -eps)
-        return false;
-    return true;
+
+    return (abs(e1d) <= eps && abs(e2d) <= eps);
 }
-void esCalculatorTests::testCompare0()
+void EsCalculatorTests::testMatricesIsEqual0()
 {
-    Mat33D a;
-    a << -1.2 , -.3 , 2.2 , 1 , 2 , .2 , 1.2 , .6 , 1.1;
-    Mat33D b;
+    Matrix3d a, b;
+    a << -1.2, -.3 , 2.2, 1, 2, .2, 1.2, .6, 1.1;
     b << -1.20000, -.3, 2.2000, (.5+.5), .2 * 10.0, .2, 1.2, .6, 1.1;
 
-    QVERIFY(compareMatrices33D(a,b));
+    QVERIFY(isEqualMatrices(a,b));
 }
 
-void esCalculatorTests::testCompare1()
+void EsCalculatorTests::testMatricesIsEqual1()
 {
-    Mat33D a;
+    Matrix3d a, b;
     a << 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, .5, .5, .5;
-    Mat33D b = a;
+    b = a;
 
-    QVERIFY(compareMatrices33D(a,b));
+    QVERIFY(isEqualMatrices(a,b));
 }
 
-void esCalculatorTests::testNonCompare0()
+void EsCalculatorTests::testMatricesIsNonEqual0()
 {
-    Mat33D a;
-    a << 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, .5, .5, .5;
-    Mat33D b;
+    Matrix3d a, b;
+    a << 1.0, 2.0, 3.0 , 3.0, 2.0, 1.0, .5, .5, .5;
     b << 1.0, 2.0, 3.01, 3.0, 2.0, 1.0, .5, .5, .5;
 
-    QVERIFY(!compareMatrices33D(a,b));
+    QVERIFY(!isEqualMatrices(a,b));
 }
 
-void esCalculatorTests::testQ_Simple()
+void EsCalculatorTests::testTriangleIsInUV0()
 {
-    Mat33D a, b, Q;
+    Matrix3d a;
+    a <<
+         .0, 1.0, 2.0,
+         1.0, .0, 2.0,
+         .0, .0, .0;
+
+    QVERIFY(isTriangleStackLyingInUv(a));
+}
+
+void EsCalculatorTests::testTriangleIsInUV1()
+{
+    Matrix3d a;
+    a <<
+         1.0, 3.0, 2.0,
+         1.0, .0, 2.0,
+         1E-6, -5E-6, -.0;
+
+    QVERIFY(isTriangleStackLyingInUv(a));
+}
+
+void EsCalculatorTests::testTriangleIsInsideUV0()
+{
+    Matrix3d a;
+    a <<
+         .0, 1.0, 2.0,
+         1.0, .0, 2.0,
+         -.0, .001, .0;
+
+    QVERIFY(!isTriangleStackLyingInUv(a));
+}
+
+void EsCalculatorTests::testEdgeLength0()
+{
+    Matrix3d a;
+    a <<
+         .0, 1.0, 0,
+         .0, .0, 3.0,
+         .0, .0, 4.0;
+
+    double e1length, e2length;
+    edgeLengths(a, e1length, e2length);
+
+    QVERIFY(abs(e1length - 1.0) <= eps);
+    QVERIFY(abs(e2length - 5.0) <= eps);
+}
+
+void EsCalculatorTests::testEdgeLength1()
+{
+    const Matrix3d a = Matrix3d::Identity();
+    double e1length, e2length;
+    edgeLengths(a, e1length, e2length);
+
+    const double rootTwo = sqrt(2.0);
+    QVERIFY(abs(e1length - rootTwo) <= eps);
+    QVERIFY(abs(e2length - rootTwo) <= eps);
+}
+
+void EsCalculatorTests::testEdgeLength2()
+{
+    const Matrix3d a = Matrix3d::Zero();
+    double e1length, e2length;
+    edgeLengths(a, e1length, e2length);
+
+    QVERIFY(abs(e1length) <= eps);
+    QVERIFY(abs(e2length) <= eps);
+}
+
+void EsCalculatorTests::testEdgeLengthsAreEqual0()
+{
+    Matrix3d a,b;
+    a << .0, 3.0, 2.0, .0, 4.0, .4, .1, .1, .2;
+    b << .0, 4.0, -2.0, .0, 3.0, -.4, .1, .1, .0;
+
+    QVERIFY(isEqualTrianglesEdgeLengths(a, b));
+}
+
+void EsCalculatorTests::testEdgeLengthsAreEqual1()
+{
+    Matrix3d a,b;
+    a << .0, 3.0, 2.0, .0, 4.0, .4, .1, .1, .2;
+    b = a;
+
+    QVERIFY(isEqualTrianglesEdgeLengths(a, b));
+}
+
+void EsCalculatorTests::testTransformBetweenAnyTriangles0()
+{
+    Matrix3d a, b;
     a << -1.2 , -.3 , 2.2 , 1 , 2 , .2 , 1.2 , .6 , 1.1;
     b << 1.0, 2.0, 3.01, 3.0, 2.0, 1.0, .5, .5, .5;
 
-    esCalculator e;
-    e.calculateQ(a, b, Q);
+    Matrix3d Q =
+        EsCalculator::transformBetweenTriangles(a, b);
 
-    QVERIFY(compareMatrices33D(Q * a, b));
+    QVERIFY(isEqualMatrices(Q * a, b));
 }
 
-void esCalculatorTests::testQ_GtoUV()
+void EsCalculatorTests::testTransformBetweenTrianglesToUV()
 {
-    Mat33D a, b, Q;
+    Matrix3d a, b;
     a << 1, 2, 3, 4, 5, 6, -1, -2, 5;
     b << .5, .7, .2, .4, .9, .1, .0, .0, .0;
 
-    esCalculator e;
-    e.calculateQ(a, b, Q);
+    Matrix3d Q =
+        EsCalculator::transformBetweenTriangles(a, b);
 
-    QVERIFY(compareMatrices33D(Q * a, b));
+    QVERIFY(isEqualMatrices(Q * a, b));
+    QVERIFY(isTriangleStackLyingInUv(Q));
 }
 
-void esCalculatorTests::testQ_GtoUVBorders()
+void EsCalculatorTests::testTransformBetweenSameTrianglesIsIdentity()
 {
-    Mat33D a, b, Q;
+    Matrix3d a;
+    a << 1, 2, 3, 0, -1, -0, -1, -2, 5;
+
+    QVERIFY(isEqualMatrices(EsCalculator::transformBetweenTriangles(a, a), Matrix3d::Identity()));
+}
+
+void EsCalculatorTests::testTransformBetweenTrianglesToUVCaseBorder()
+{
+    Matrix3d a, b;
     a << 1, 2, 3, 1, 4, 1, 2, 10, 2;
     b << 1.0, .0, .0, 1.0, 1.0, .0, .0, .0, .0;
 
-    esCalculator e;
-    e.calculateQ(a, b, Q);
+    Matrix3d Q =
+        EsCalculator::transformBetweenTriangles(a, b);
 
-    QVERIFY(compareMatrices33D(Q * a, b));
+    QVERIFY(isEqualMatrices(Q * a, b));
 }
 
-void esCalculatorTests::testQ_Same()
+void EsCalculatorTests::testTransformBetweenAnyTrianglesCaseSame()
 {
-    Mat33D a, b, Q;
-    b << 1.0, .0, .0, 1.0, 1.0, .0, .0, .0, .0;
-    a = b;
+    Matrix3d a, b;
+    a << 1.0, .0, .0, 1.0, 1.0, .0, .0, .0, .0;
+    b = a;
 
-    esCalculator e;
-    e.calculateQ(a, b, Q);
+    Matrix3d Q =
+        EsCalculator::transformBetweenTriangles(a, b);
 
-    QVERIFY(compareMatrices33D(Q * a, b));
+    QVERIFY(isEqualMatrices(Q * a, b));
 }
 
-void esCalculatorTests::testQ_Parallel()
+void EsCalculatorTests::testTransformBetweenAnyTrianglesCaseParallel()
 {
-    Mat33D a, b, Q;
+    Matrix3d a, b;
     a << 6.0, -.3, .2, 3.0, 6.0, .0, 2.0, 2.0, 2.0;
     b << 1.0, .0, .0, 1.0, 1.0, .0, .0, .0, .0;
 
-    esCalculator e;
-    e.calculateQ(a, b, Q);
+    Matrix3d Q =
+        EsCalculator::transformBetweenTriangles(a, b);
 
-    QVERIFY(compareMatrices33D(Q * a, b));
+    QVERIFY(isEqualMatrices(Q * a, b));
 }
 
-void esCalculatorTests::testQ_Ortogonal()
+void EsCalculatorTests::testTransformBetweenAnyTrianglesCaseOrtogonal()
 {
-    Mat33D a, b, Q;
+    Matrix3d a, b;
     a << .1, .1, .1, .1, 2.0, .1, .2, 1.0, 3.0;
     b << 1.0, .0, .0, 1.0, 1.0, .0, .0, .0, .0;
 
-    esCalculator e;
-    e.calculateQ(a, b, Q);
-    QVERIFY(compareMatrices33D(Q * a, b));
+    Matrix3d Q =
+        EsCalculator::transformBetweenTriangles(a, b);
+
+    QVERIFY(isEqualMatrices(Q * a, b));
 }
 
-void esCalculatorTests::testCentrate0()
+void EsCalculatorTests::testCentredTriange0()
 {
-    Mat33D a, aCentrated, aCentrAnalitic;
+    Matrix3d a, aCentrAnalitic;
     a << -.1, .1, .0, .5, -.5, 1.2, 5, 8, 5;
     aCentrAnalitic << -.1, .1, .0, .1, -.9, .8, -1, 2, -1;
 
-    esCalculator e;
-    e.centrateMatrix(a, aCentrated);
-    QVERIFY(compareMatrices33D(aCentrAnalitic, aCentrated));
+    const Matrix3d aCentrated =
+            EsCalculator::centredTriangleStack(a);
+
+    QVERIFY(isEqualMatrices(aCentrAnalitic, aCentrated));
 }
 
-void esCalculatorTests::testCentrate1()
+void EsCalculatorTests::testCentredTriange1()
 {
-    Mat33D a, aCentrated, aCentrAnalitic;
+    Matrix3d a;
     a << -.1, .1, .0, .5, -1.5, 1, 20, 100, -120;
-    aCentrAnalitic = a;
 
-    esCalculator e;
-    e.centrateMatrix(a, aCentrated);
-    QVERIFY(compareMatrices33D(aCentrAnalitic, aCentrated));
+    const Matrix3d aCentrated =
+            EsCalculator::centredTriangleStack(a);
+
+    QVERIFY(isEqualMatrices(aCentrated, a));
 }
 
-Mat33D esCalculatorTests::calculateRGcenter(const Mat33D &g, const Mat33D &uv) const
+Matrix3d EsCalculatorTests::closestRotationMatrix(const Matrix3d &g, const Matrix3d &uv) const
 {
-    esCalculator e;
-    Mat33D a, b, R, Q;
-
     // centrate triangles a0, and uv b0
-    e.centrateMatrix(g, a);
-    e.centrateMatrix(uv, b);
+    const Matrix3d a = EsCalculator::centredTriangleStack(g);
+    const Matrix3d b = EsCalculator::centredTriangleStack(uv);
 
     // calculate Q, then closest R, which should lie down the a0 to b0 plane
-    e.calculateQ(a, b, Q);
-    e.calculateClosestR(Q, R);
-
-    return R * a;
+    const Matrix3d Q = EsCalculator::transformBetweenTriangles(a, b);
+    return EsCalculator::closestRotationMatrix(Q);
+}
+Matrix3d EsCalculatorTests::closestApplyRotationMatrixToG(const Matrix3d &g, const Matrix3d &uv) const
+{
+    return closestRotationMatrix(g, uv) * EsCalculator::centredTriangleStack(g);
 }
 
 
-void esCalculatorTests::testRcenter_LiePlane()
+void EsCalculatorTests::testClosestRotationMatrixIsLyingToUV()
 {
-    Mat33D g, uv;
+    Matrix3d g, uv;
     g << -1.2 , -.3 , 2.2 , 1 , 2 , .2 , 1.2 , .6 , 1.1;
     uv << 1.0, .1, .6, .9, .5, .2, .0, .0, .0;
 
-    QVERIFY(isMatrix33DinUV(calculateRGcenter(g, uv)));
+    QVERIFY(isTriangleStackLyingInUv(closestApplyRotationMatrixToG(g, uv)));
 }
 
-void esCalculatorTests::testRcenter_EqualSides()
+void EsCalculatorTests::testClosestRotationMatrixDoNotChangeEdgeLength()
 {
-    Mat33D g, uv;
+    Matrix3d g, uv;
     g << -1.2 , -.3 , 2.2 , 1 , 2 , .2 , 1.2 , .6 , 1.1;
     uv << 1.0, .1, .6, .9, .5, .2, .0, .0, .0;
 
-    QVERIFY(compareTriangleEdges(calculateRGcenter(g, uv), g));
+    QVERIFY(isEqualTrianglesEdgeLengths(closestApplyRotationMatrixToG(g, uv), g));
 }
 
-void esCalculatorTests::testRcenter_Complex0()
+void EsCalculatorTests::testClosestRotationAnyCase()
 {
-    Mat33D g, uv;
+    Matrix3d g, uv;
     g << .1, .1, .1, .1, 2.0, .1, .2, 1.0, 3.0;
     uv << 1.0, .0, .0, 1.0, 1.0, .0, .0, .0, .0;
 
-    const Mat33D lied = calculateRGcenter(g, uv);
+    const Mat33D lied = closestApplyRotationMatrixToG(g, uv);
 
-    QVERIFY(isMatrix33DinUV(lied));
-    QVERIFY(compareTriangleEdges(lied, g));
+    QVERIFY(isTriangleStackLyingInUv(lied));
+    QVERIFY(isEqualTrianglesEdgeLengths(lied, g));
+}
+
+void EsCalculatorTests::testClosestRotationMatrixNumerical0()
+{
+    Matrix3d g, uv;
+    g << .0, 1, 2, 1, 0, 1, 2, 2, 2;
+    uv << .0, .5, 1, .5, .0, .5, 0, 0, 0;
+
+    QVERIFY(isEqualMatrices(Matrix3d::Identity(), closestRotationMatrix(g, uv)));
+}
+
+void EsCalculatorTests::testClosestRotationMatrixNumerical1()
+{
+    Matrix3d g, uv, Ranalitic;
+    g << .0, 1, 2, 2, 2, 2, 1, 0, 1;
+    uv << .0, .5, 1, .5, .0, .5, 0, 0, 0;
+
+    Ranalitic << 1, 0, 0, 0, 0, 1, 0, -1, 0;
+
+    QVERIFY(isEqualMatrices(Ranalitic, closestRotationMatrix(g, uv)));
 }

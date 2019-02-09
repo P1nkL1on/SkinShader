@@ -22,12 +22,12 @@ void MainWindow::paintEvent(QPaintEvent *e)
     d.setScale(150.0);
     //d.drawModel(&qp, t);
 //    c.test0();
-    c.test(&qp, &d);
+//    c.test(&qp, &d);
     qp.end();
 }
 
 void MainWindow::runTests() const
 {
-    esCalculatorTests esCTests;
+    EsCalculatorTests esCTests;
     QTest::qExec(&esCTests);
 }

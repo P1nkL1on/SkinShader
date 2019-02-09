@@ -5,13 +5,13 @@
 #include <QVector2D>
 #include <qpainter.h>
 
-class esDrawer
+class EsDrawer
 {
 public:
-    esDrawer() = default;
+    EsDrawer() = default;
     void setScale(const double scaling);
 
-    void drawModel(QPainter *painter, const esModel &model) const;
+    void drawModel(QPainter *painter, const EsModel &model) const;
     void drawSystemG(QPainter *painter, const double scale) const;
     void drawLine(QPainter *painter, const EigenFuncs::Vector3D &v1, const EigenFuncs::Vector3D &v2, const QColor &color = Qt::red , const float width = 1) const;
     void drawTriangleG(QPainter *painter, const EigenFuncs::Vector3D &v1, const EigenFuncs::Vector3D &v2, const EigenFuncs::Vector3D &v3,

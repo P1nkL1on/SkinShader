@@ -31,7 +31,8 @@ SOURCES += \
     esmodel.cpp \
     esdrawer.cpp \
     escalculator.cpp \
-    escalculatortests.cpp
+    escalculatortests.cpp \
+    escalculatorhelp.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +40,8 @@ HEADERS += \
     esfuncs.h \
     esdrawer.h \
     escalculator.h \
-    escalculatortests.h
+    escalculatortests.h \
+    escalculatorhelp.h
 
 FORMS += \
         mainwindow.ui

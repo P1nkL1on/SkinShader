@@ -2,7 +2,7 @@
 
 using namespace EigenFuncs;
 
-esModel::esModel(
+EsModel::EsModel(
         const QVector<Vector3D> &v,
         const QVector<Vector2D> &vt,
         const QVector<int> &s,
@@ -15,7 +15,7 @@ esModel::esModel(
 
 }
 
-esModel esModel::createTestModel(const int modelIndex)
+EsModel EsModel::createTestModel(const int modelIndex)
 {
     const QVector<Vector3D> v = {makeVector3D(.0, .8, 5.0), makeVector3D(.6, 1.8,4.6), makeVector3D(1.5, -.8, 5.2),
                                  makeVector3D(2.0, 1.2, 5.0), makeVector3D(1.1, 3.8, 4.0)};
@@ -23,25 +23,25 @@ esModel esModel::createTestModel(const int modelIndex)
     const QVector<int> s = {0,1,2,  2,1,3,   3,1,4};
     const QVector<int> st { 4, 1, 3,  2,1,4,  2,0,1 };
 
-    return esModel(v, vt, s, st);
+    return EsModel(v, vt, s, st);
 }
 
-QVector<Vector3D> esModel::v() const
+QVector<Vector3D> EsModel::v() const
 {
     return m_v;
 }
 
-QVector<Vector2D> esModel::vt() const
+QVector<Vector2D> EsModel::vt() const
 {
     return m_vt;
 }
 
-QVector<int> esModel::s() const
+QVector<int> EsModel::s() const
 {
     return m_s;
 }
 
-QVector<int> esModel::st() const
+QVector<int> EsModel::st() const
 {
     return m_st;
 }

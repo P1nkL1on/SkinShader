@@ -4,23 +4,21 @@
 #include "esdrawer.h"
 #include "string"
 
-class esCalculator
+namespace EsCalculator
 {
-public:
-    esCalculator() = default;
+    Eigen::Vector3d centredTriangleStack(const Eigen::Matrix3d &originalTriangleStack, Eigen::Matrix3d &resultCentredTriangleStack);
+    Eigen::Matrix3d centredTriangleStack(const Eigen::Matrix3d &originalTriangleStack);
 
-    Eigen::Matrix<double, 3,1> centrateMatrix(const EigenFuncs::Mat33D &orig, EigenFuncs::Mat33D &res) const;
-    void calculateQ (const EigenFuncs::Mat33D &V_g, const EigenFuncs::Mat33D &V_uv, EigenFuncs::Mat33D &resQ) const;
-    void calculateT (const EigenFuncs::Mat22D &e, const EigenFuncs::Mat22D &e_R, EigenFuncs::Mat22D &resT) const;
-    void calculateClosestR (const EigenFuncs::Mat33D &Q, EigenFuncs::Mat33D &resR) const;
-    void calculateE1E2 (const Eigen::MatrixXd &orig, EigenFuncs::Mat22D &res) const;
-    void coutMatrix(const std::string &name, const Eigen::MatrixXd &doubleMatrix) const;
-    void coutEdgeLengths(const std::string &name, const Eigen::MatrixXd &mat) const;
+    void traceMatrix(const Eigen::Matrix3Xd &doubleMatrix, const std::string &name = "matrix");
+    void traceEdgeLengths(const Eigen::Matrix3d &triangleStack, const std::string &name = "edge's lengths");
 
-    void test(QPainter *qp, esDrawer *dr) const;
-private:
-    EigenFuncs::Mat22D removeLastRow(const EigenFuncs::Mat33D &mat) const;
-    void test0() const;
-};
+    Eigen::Matrix3d transformBetweenTriangles(const Eigen::Matrix3d &triangleStack, const Eigen::Matrix3d &targetTriangleStack);
+    Eigen::Matrix3d closestRotationMatrix(const Eigen::Matrix3d &transformMatrix);
+    Eigen::Matrix2d transformBetweenEdgePair(const Eigen::Matrix2d &originalEdgeStack, const Eigen::Matrix2d &targetEdgeStack);
+
+    Eigen::Matrix2d leftTopBlock(const Eigen::Matrix3d &triangleStack);
+    Eigen::Matrix2d edgeStack (const Eigen::MatrixXd &orig);
+}
+
 
 #endif // ESCALCULATOR_H

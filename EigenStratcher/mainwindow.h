@@ -19,9 +19,9 @@ public:
 private:
     void runTests() const;
     Ui::MainWindow *ui;
-    esModel t = esModel::createTestModel();
-    esDrawer d = esDrawer();
-    esCalculator c = esCalculator();
+    EsModel t = EsModel::createTestModel();
+    EsDrawer d = EsDrawer();
+    //EsCalculator c = EsCalculator();
 protected:
     void paintEvent(QPaintEvent *e);
 };

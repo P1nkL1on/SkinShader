@@ -2,7 +2,7 @@
 
 using namespace EigenFuncs;
 
-void esDrawer::setScale(const double scaling)
+void EsDrawer::setScale(const double scaling)
 {
     m_scaling = scaling;
 }
@@ -12,7 +12,7 @@ QColor mixColor(double k){
     return QColor(val,val,val);
 }
 
-void esDrawer::drawModel(QPainter *painter, const esModel &model) const
+void EsDrawer::drawModel(QPainter *painter, const EsModel &model) const
 {
     const auto v = model.v();
     const auto vt = model.vt();
@@ -31,7 +31,7 @@ void esDrawer::drawModel(QPainter *painter, const esModel &model) const
         drawTriangleGmonocolor(painter, v[s[i]], v[s[i + 1]], v[s[i + 2]], 2, mixColor(1.0 * (i/3) / polygonCount));
 }
 
-void esDrawer::drawSystemG(QPainter *painter, const double scale) const
+void EsDrawer::drawSystemG(QPainter *painter, const double scale) const
 {
     Vector3D zero = makeVector3D(0,0,0);
     Vector3D zeroX = makeVector3D(scale,0,0);
@@ -42,7 +42,7 @@ void esDrawer::drawSystemG(QPainter *painter, const double scale) const
     drawLine(painter, zero, zeroZ, Qt::blue);
 }
 
-void esDrawer::drawLine(QPainter *painter, const Vector3D &v1, const Vector3D &v2, const QColor &color, const float width) const
+void EsDrawer::drawLine(QPainter *painter, const Vector3D &v1, const Vector3D &v2, const QColor &color, const float width) const
 {
     const auto from = translateVec3(v1);
     const auto to = translateVec3(v2);
@@ -51,7 +51,7 @@ void esDrawer::drawLine(QPainter *painter, const Vector3D &v1, const Vector3D &v
 }
 
 //drawTriangleG(painter, v1,v2,v3);
-void esDrawer::drawTriangleG(QPainter *painter,
+void EsDrawer::drawTriangleG(QPainter *painter,
                              const Vector3D &v1, const Vector3D &v2, const Vector3D &v3,
                              const float lineWidth, const QVector<QColor> triangleColors) const
 {
@@ -75,12 +75,12 @@ void esDrawer::drawTriangleG(QPainter *painter,
     drawTriDotTriangle(painter, planeC, lineWidth, triangleColors);
 }
 
-void esDrawer::drawTriangleGmonocolor(QPainter *painter, const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, const float lineWidth, const QColor triangleColor) const
+void EsDrawer::drawTriangleGmonocolor(QPainter *painter, const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, const float lineWidth, const QColor triangleColor) const
 {
     drawTriangleG(painter, v1,v2,v3, lineWidth, {triangleColor, triangleColor, triangleColor});
 }
 
-void esDrawer::drawTriangleUV(QPainter *painter, const Vector2D &v1, const Vector2D &v2, const Vector2D &v3, const float lineWidth, const QVector<QColor> triangleColors) const
+void EsDrawer::drawTriangleUV(QPainter *painter, const Vector2D &v1, const Vector2D &v2, const Vector2D &v3, const float lineWidth, const QVector<QColor> triangleColors) const
 {
     if (triangleColors.length() != 3)
         return;
@@ -88,12 +88,12 @@ void esDrawer::drawTriangleUV(QPainter *painter, const Vector2D &v1, const Vecto
     drawTriDotTriangle(painter, planeC, lineWidth, triangleColors);
 }
 
-void esDrawer::drawTriangleUVmonocolor(QPainter *painter, const Vector2D &v1, const Vector2D &v2, const Vector2D &v3, const float lineWidth, const QColor triangleColor) const
+void EsDrawer::drawTriangleUVmonocolor(QPainter *painter, const Vector2D &v1, const Vector2D &v2, const Vector2D &v3, const float lineWidth, const QColor triangleColor) const
 {
     drawTriangleUV(painter, v1,v2,v3, lineWidth, {triangleColor, triangleColor, triangleColor});
 }
 
-void esDrawer::debugTriangle(QPainter *painter, const Mat33D &mat, const QColor &fillColor, const float width) const
+void EsDrawer::debugTriangle(QPainter *painter, const Mat33D &mat, const QColor &fillColor, const float width) const
 {
     drawTriangleGmonocolor(painter,
                   makeVector3D(mat(0,0), mat(1,0), mat(2,0)),
@@ -102,7 +102,7 @@ void esDrawer::debugTriangle(QPainter *painter, const Mat33D &mat, const QColor 
                   width, fillColor);
 }
 
-void esDrawer::debugTriangle(QPainter *painter, const Mat23D &mat) const
+void EsDrawer::debugTriangle(QPainter *painter, const Mat23D &mat) const
 {
     drawTriangleG(painter,
                makeVector3D(mat(0,0), mat(1,0), .0),
@@ -110,20 +110,20 @@ void esDrawer::debugTriangle(QPainter *painter, const Mat23D &mat) const
                makeVector3D(mat(0,2), mat(1,2), .0));
 }
 
-QVector2D esDrawer::translateVec3(const Vector3D &v) const
+QVector2D EsDrawer::translateVec3(const Vector3D &v) const
 {
     return QVector2D((int)(m_scaling * (v(0,0) + m_zToXProect * v(0,2))) + m_centerG.x(),
                      (int)(m_scaling * (- v(0,1) + m_zToYProect * v(0,2))) + m_centerG.y());
 }
 
-QVector2D esDrawer::translateVec2(const Vector2D &v) const
+QVector2D EsDrawer::translateVec2(const Vector2D &v) const
 {
     return QVector2D((int)(m_sizeUV * v(0,0)) + m_centerUV.x(),
                      (int)(m_sizeUV * v(0,1)) + m_centerUV.y());
 }
 
 int colorSwap = 0;
-void esDrawer::drawTriDotTriangle(QPainter *painter, const QVector<QVector2D> &dots, const float lineWidth, QVector<QColor> triangleColors) const
+void EsDrawer::drawTriDotTriangle(QPainter *painter, const QVector<QVector2D> &dots, const float lineWidth, QVector<QColor> triangleColors) const
 {
     if (triangleColors.length() != 3 || dots.length() != 3)
         return;

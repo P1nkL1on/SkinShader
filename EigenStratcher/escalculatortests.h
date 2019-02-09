@@ -4,37 +4,52 @@
 #include <QTest>
 #include "escalculator.h"
 
-class esCalculatorTests : public QObject
+class EsCalculatorTests : public QObject
 {
     Q_OBJECT
 public:
 
 private:
     const double eps = 1E-5;
-    bool compareMatrices33D(const EigenFuncs::Mat33D &a, const EigenFuncs::Mat33D &b) const;
-    bool isMatrix33DinUV(const EigenFuncs::Mat33D &mat) const;
-    void caluclateEdgeLength(const EigenFuncs::Mat33D &mat, double &edge1, double &edge2) const;
-    bool compareTriangleEdges(const EigenFuncs::Mat33D &a, const EigenFuncs::Mat33D &b) const;
+    bool isEqualMatrices(const Eigen::Matrix3d &a, const Eigen::Matrix3d &b) const;
+    bool isTriangleStackLyingInUv(const Eigen::Matrix3d &triangleStack) const;
+    bool isEqualTrianglesEdgeLengths(const Eigen::Matrix3d &triangleStack1, const Eigen::Matrix3d &triangleStack2) const;
+    void edgeLengths(const Eigen::Matrix3d &triangleStack, double &edge1Length, double &edge2Length) const;
 
-    EigenFuncs::Mat33D calculateRGcenter(const EigenFuncs::Mat33D &g, const EigenFuncs::Mat33D &uv) const;
+    Eigen::Matrix3d closestRotationMatrix(const Eigen::Matrix3d &g, const Eigen::Matrix3d &uv) const;
+    Eigen::Matrix3d closestApplyRotationMatrixToG(const Eigen::Matrix3d &g, const Eigen::Matrix3d &uv) const;
 private slots:
-    void testCompare0();
-    void testCompare1();
-    void testNonCompare0();
+    void testMatricesIsEqual0();
+    void testMatricesIsEqual1();
+    void testMatricesIsNonEqual0();
 
-    void testQ_Simple();
-    void testQ_GtoUV();
-    void testQ_GtoUVBorders();
-    void testQ_Same();
-    void testQ_Parallel();
-    void testQ_Ortogonal();
+    void testTriangleIsInUV0();
+    void testTriangleIsInUV1();
+    void testTriangleIsInsideUV0();
 
-    void testCentrate0();
-    void testCentrate1();
+    void testEdgeLength0();
+    void testEdgeLength1();
+    void testEdgeLength2();
 
-    void testRcenter_LiePlane();
-    void testRcenter_EqualSides();
-    void testRcenter_Complex0();
+    void testEdgeLengthsAreEqual0();
+    void testEdgeLengthsAreEqual1();
+
+    void testTransformBetweenAnyTriangles0();
+    void testTransformBetweenTrianglesToUV();
+    void testTransformBetweenSameTrianglesIsIdentity();
+    void testTransformBetweenTrianglesToUVCaseBorder();
+    void testTransformBetweenAnyTrianglesCaseSame();
+    void testTransformBetweenAnyTrianglesCaseParallel();
+    void testTransformBetweenAnyTrianglesCaseOrtogonal();
+
+    void testCentredTriange0();
+    void testCentredTriange1();
+
+    void testClosestRotationMatrixIsLyingToUV();
+    void testClosestRotationMatrixDoNotChangeEdgeLength();
+    void testClosestRotationAnyCase();
+    void testClosestRotationMatrixNumerical0();
+    void testClosestRotationMatrixNumerical1();
 };
 
 #endif // ESCALCULATORTESTS_H

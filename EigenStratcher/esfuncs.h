@@ -22,32 +22,38 @@ using Mat23D = Eigen::Matrix<double,2,3>;
 using Mat22D = Eigen::Matrix<double,2,2>;
 
 template <typename Scalar>
-inline void traceVector3 (const Vector3<Scalar> &v){
+inline void traceVector3 (const Vector3<Scalar> &v)
+{
     std::cout << "v3" << std::endl;
     std::cout << v << std::endl;
 }
 template <typename Scalar>
-inline void traceVector2 (const Vector2<Scalar> &v){
+inline void traceVector2 (const Vector2<Scalar> &v)
+{
     std::cout << "v2" << std::endl;
     std::cout << v << std::endl;
 }
 
-inline Vector3D makeVector3D (const double a, const double b, const double c){
+inline Vector3D makeVector3D (const double a, const double b, const double c)
+{
     Vector3D res;
     res << a,b,c;
     return res;
 }
-inline Vector2D makeVector2D (const double u, const double v){
+inline Vector2D makeVector2D (const double u, const double v)
+{
     Vector2D res;
     res << u, v;
     return res;
 }
-inline Mat33D makeMat33DFrom3Vector3D(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3){
+inline Mat33D makeMat33DFrom3Vector3D(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3)
+{
     Mat33D res;
     res << v1(0,0), v2(0,0), v3(0,0), v1(0,1), v2(0,1), v3(0,1), v1(0,2), v2(0,2), v3(0,2);
     return res;
 }
-inline Mat23D makeMat23DFrom3Vector2D(const Vector2D &v1, const Vector2D &v2, const Vector2D &v3){
+inline Mat23D makeMat23DFrom3Vector2D(const Vector2D &v1, const Vector2D &v2, const Vector2D &v3)
+{
     Mat23D res;
     res << v1(0,0), v2(0,0), v3(0,0), v1(0,1), v2(0,1), v3(0,1);
     return res;
