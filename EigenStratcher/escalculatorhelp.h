@@ -2,6 +2,7 @@
 #define ESCALCULATORHELP_H
 
 #include "escalculator.h"
+#include "esdrawer.h"
 
 namespace EsCalculatorHelp{
 
@@ -10,6 +11,7 @@ namespace EsCalculatorHelp{
 //    void test(QPainter *qp, esDrawer *dr) const;
 //    void test0() const;
 
+    void testRandomTriangleWithPainting(QPainter *qp, EsDrawer *dr);
 }
 
 #endif // ESCALCULATORHELP_H

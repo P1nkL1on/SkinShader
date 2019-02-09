@@ -23,6 +23,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
     //d.drawModel(&qp, t);
 //    c.test0();
 //    c.test(&qp, &d);
+    EsCalculatorHelp::testRandomTriangleWithPainting(&qp, &d);
     qp.end();
 }
 

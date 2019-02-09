@@ -1,7 +1,6 @@
 #include "escalculatortests.h"
 using namespace std;
 using namespace Eigen;
-using namespace EigenFuncs;
 
 bool EsCalculatorTests::isEqualMatrices(const Matrix3d &a, const Matrix3d &b) const
 {
@@ -293,7 +292,7 @@ void EsCalculatorTests::testClosestRotationAnyCase()
     g << .1, .1, .1, .1, 2.0, .1, .2, 1.0, 3.0;
     uv << 1.0, .0, .0, 1.0, 1.0, .0, .0, .0, .0;
 
-    const Mat33D lied = closestApplyRotationMatrixToG(g, uv);
+    const Matrix3d lied = closestApplyRotationMatrixToG(g, uv);
 
     QVERIFY(isTriangleStackLyingInUv(lied));
     QVERIFY(isEqualTrianglesEdgeLengths(lied, g));

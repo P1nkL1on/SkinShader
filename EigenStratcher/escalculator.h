@@ -1,8 +1,10 @@
 #ifndef ESCALCULATOR_H
 #define ESCALCULATOR_H
 
-#include "esdrawer.h"
 #include "string"
+#include "Eigen/Core"
+#include <Eigen/Dense>
+
 
 namespace EsCalculator
 {

@@ -37,7 +37,6 @@ SOURCES += \
 HEADERS += \
         mainwindow.h \
     esmodel.h \
-    esfuncs.h \
     esdrawer.h \
     escalculator.h \
     escalculatortests.h \

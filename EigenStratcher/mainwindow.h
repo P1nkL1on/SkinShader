@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "escalculatortests.h"
-
+#include "escalculatorhelp.h"
 namespace Ui {
 class MainWindow;
 }
@@ -19,7 +19,7 @@ public:
 private:
     void runTests() const;
     Ui::MainWindow *ui;
-    EsModel t = EsModel::createTestModel();
+//    EsModel t = EsModel::createTestModel();
     EsDrawer d = EsDrawer();
     //EsCalculator c = EsCalculator();
 protected:
