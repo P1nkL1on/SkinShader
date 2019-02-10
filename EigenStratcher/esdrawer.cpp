@@ -1,5 +1,6 @@
 #include "esdrawer.h"
-
+#include "iostream"
+using namespace std;
 using namespace Eigen;
 
 void EsDrawer::setScale(const double scaling)
@@ -44,11 +45,28 @@ void EsDrawer::drawSystemG(QPainter *painter, const double scale) const
     drawLine(painter, zero, zeroZ, Qt::blue);
 }
 
+void EsDrawer::drawSystemUV(QPainter *painter) const
+{
+    Matrix2d worldCoords = Matrix2d::Identity();
+
+    Vector2d zero = Vector2d::Zero();
+    Vector2d ones = Vector2d::Ones();
+
+    const Vector2d zeroX = worldCoords.col(0);
+    const Vector2d zeroY = worldCoords.col(1);
+
+    drawLine(painter, zero, zeroX * 1.2, Qt::red, 3);
+    drawLine(painter, zero, zeroY * 1.2, Qt::green, 3);
+    drawLine(painter, ones, zeroY, Qt::red, 1);
+    drawLine(painter, ones, zeroX, Qt::green, 1);
+}
+
 void EsDrawer::drawLine(QPainter *painter, const Vector2d &v1, const Vector2d &v2, const QColor &color, const float width) const
 {
-    const auto from = translateVec2(v1, false);
-    const auto to = translateVec2(v2, false);
+    const auto from = translateVec2(v1, true);
+    const auto to = translateVec2(v2, true);
     painter->setPen(QPen(color, width));
+//    cout << from.x() <<" " << from.y()<<" "  << to.x()<<" "  << to.y() << endl;
     painter->drawLine(from.x(), from.y(), to.x(), to.y());
 }
 
@@ -106,6 +124,12 @@ void EsDrawer::drawTriangleUVmonocolor(QPainter *painter, const Vector2d &v1, co
 void EsDrawer::debugTriangle(QPainter *painter, const Eigen::Matrix3d &mat, const QColor &fillColor, const float width) const
 {
     drawTriangleGmonocolor(painter, mat.col(0), mat.col(1), mat.col(2), width, fillColor);
+}
+
+void EsDrawer::debugTriangleUV(QPainter *painter, const Matrix3d &mat, const QColor &fillColor, const float width) const
+{
+    const MatrixXd bl = mat.block<2, 3>(0,0);
+    drawTriangleUVmonocolor(painter, bl.col(0), bl.col(1), bl.col(2), width, fillColor);
 }
 
 //void EsDrawer::debugTriangle(QPainter *painter, const Mat23D &mat) const

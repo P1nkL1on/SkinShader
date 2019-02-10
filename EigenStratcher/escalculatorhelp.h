@@ -12,6 +12,7 @@ namespace EsCalculatorHelp{
 //    void test0() const;
 
     void testRandomTriangleWithPainting(QPainter *qp, EsDrawer *dr);
+    void testRandom2TriangleWithPainting(QPainter *qp, EsDrawer *dr);
 }
 
 #endif // ESCALCULATORHELP_H
