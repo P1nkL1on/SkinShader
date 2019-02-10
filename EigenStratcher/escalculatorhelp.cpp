@@ -65,7 +65,7 @@ void EsCalculatorHelp::testRandom2TriangleWithPainting(QPainter *qp, EsDrawer *d
     dr->drawSystemUV(qp);
 
     const Matrix3d triangleStack = MatrixXd::Random(3,3) + 2 * Matrix3d::Ones();
-    const Matrix3d targetTriangleStack = triangleStack + .4 * MatrixXd::Random(3,3) + Matrix3d::Ones();
+    const Matrix3d targetTriangleStack = triangleStack + .5 * MatrixXd::Random(3,3) + Matrix3d::Ones();
     Matrix3d triangleUvTriangleStack = MatrixXd::Random(3,3);
     triangleUvTriangleStack = (triangleUvTriangleStack + Matrix3d::Ones()) * .5;
     triangleUvTriangleStack(2,0) = triangleUvTriangleStack(2,1) = triangleUvTriangleStack(2,2) = 0.0;
@@ -97,10 +97,16 @@ void EsCalculatorHelp::testRandom2TriangleWithPainting(QPainter *qp, EsDrawer *d
 
     dr->debugTriangleUV(qp, R0 * Vg0, Qt::red);
     dr->debugTriangleUV(qp, RT * VgT, Qt::blue);
-    return;
     // T = ...
     const Matrix2d T = transformBetweenEdgePair(e12, e12_R);
+    traceMatrix(T);
     //
+    //const Matrix3d QS = transformBetweenTriangles(Vg0, VgT);
+    //const Matrix3d RS = closestRotationMatrix(QS);
     const Matrix2d S = stretchCompressAxes(Q0, R0, T);
     //
+    const Vector2d zer = Vector2d::Zero();
+    dr->drawLine(qp, zer, S.col(0) * 1.2, QColor(0,250,250), 2);
+    dr->drawLine(qp, zer, S.col(1) * 1.2, QColor(250,250,0), 2);
+    return;
 }
