@@ -167,7 +167,7 @@ void EsDrawer::drawTriDotTriangle(QPainter *painter, const QVector<QVector2D> &d
         << QPoint(dots[2].x(), dots[2].y());
     const int cl = colorSwap % 3;
     ++colorSwap;
-    painter->setBrush(QColor(triangleColors[cl].red(),triangleColors[cl].green(), triangleColors[cl].blue(), 125));
+    //painter->setBrush(QColor(triangleColors[cl].red(),triangleColors[cl].green(), triangleColors[cl].blue(), 125));
     painter->drawPolygon(p);
     return;
     for (int from = 0; from < 3; ++from){

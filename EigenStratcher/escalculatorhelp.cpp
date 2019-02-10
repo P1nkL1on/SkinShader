@@ -140,8 +140,8 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
         const Matrix2d S = stretchCompressAxes(poly, polyTarg, polyUV, rs, rt);
         Matrix3d centredUV;
         const Vector2d uvCenter = centredTriangleStack(polyUV, centredUV).head(2);
-        dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .2, QColor(0,250,250), 2);
-        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .2, QColor(250,250,0), 2);
+        dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .1 * rs, QColor(0,250,250), 2);
+        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(250,250,0), 2);
     }
 }
 
