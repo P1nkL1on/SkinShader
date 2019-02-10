@@ -14,6 +14,13 @@ QColor mixColor(double k, const QColor original){
 
 void EsDrawer::drawModel(QPainter *painter, const EsModel &model, const QColor clr) const
 {
+    vector<int> res;
+    drawModel(painter, model, clr, res);
+}
+
+void EsDrawer::drawModel(QPainter *painter, const EsModel &model, const QColor clr,
+                         std::vector<int> &resVertices) const
+{
     const auto v = model.v();
     const auto vt = model.vt();
     const auto s = model.s();
@@ -30,6 +37,7 @@ void EsDrawer::drawModel(QPainter *painter, const EsModel &model, const QColor c
     const int polygonCount = s.length() / 3;
     for (int i = 0; i < s.length(); i+=3)
         drawTriangleGmonocolor(painter, v[s[i]], v[s[i + 1]], v[s[i + 2]], 2, mixColor(.5 + .5 * (i/3) / polygonCount, clr));
+
 }
 
 void EsDrawer::drawSystemG(QPainter *painter, const double scale) const

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qpainter.h"
-#include "trianglespeller.h"
+#include "Shading/trianglespeller.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

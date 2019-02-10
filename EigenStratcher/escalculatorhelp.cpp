@@ -1,5 +1,8 @@
 #include "escalculatorhelp.h"
 
+#include "Shading/planevectordrawer.h"
+#include "Shading/trianglespeller.h"
+
 using namespace EsCalculator;
 using namespace Eigen;
 using namespace std;
@@ -116,6 +119,12 @@ void EsCalculatorHelp::testRandom2TriangleWithPainting(QPainter *qp, EsDrawer *d
 
 void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
 {
+    PlaneVector D = PlaneVector("test.png");
+    D = D.changeSize(200, 200, 2);
+    PlaneVectorDrawer p = PlaneVectorDrawer();
+    p.mash = 2;
+    p.paint(qp,D, 150, 150);
+
     const QVector<Vector3d> v = {makeVector3D(.0, .8, 5.0), makeVector3D(.6, 1.8,4.6), makeVector3D(1.5, -.8, 5.2),
                                  makeVector3D(2.0, 1.2, 5.0), makeVector3D(1.1, 3.8, 4.0)};
     QVector<Vector3d> v2 = v;

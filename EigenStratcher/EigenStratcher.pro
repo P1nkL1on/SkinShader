@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 include(../../QT-serious/modules/Eigen/Eigen.pri)
 include(StretchCalculator/StretchCalculatorTests.pri);
+include(../TestShader/Shading/ShadingTests.pri);
 
 SOURCES += \
         main.cpp \

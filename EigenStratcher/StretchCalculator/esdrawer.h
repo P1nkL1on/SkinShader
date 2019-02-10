@@ -12,6 +12,7 @@ public:
     void setScale(const double scaling);
 
     void drawModel(QPainter *painter, const EsModel &model, const QColor clr = Qt::gray) const;
+    void drawModel(QPainter *painter, const EsModel &model, const QColor clr = Qt::gray) const;
     void drawSystemG(QPainter *painter, const double scale) const;
     void drawSystemUV(QPainter *painter) const;
     void drawLine(QPainter *painter, const Eigen::Vector2d &v1, const Eigen::Vector2d &v2, const QColor &color = Qt::red , const float width = 1) const;
