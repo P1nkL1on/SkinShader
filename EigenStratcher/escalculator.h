@@ -18,12 +18,18 @@ namespace EsCalculator
     Eigen::Matrix3d transformBetweenTriangles(const Eigen::Matrix3d &triangleStack, const Eigen::Matrix3d &targetTriangleStack);
     Eigen::Matrix3d closestRotationMatrix(const Eigen::Matrix3d &transformMatrix);
     Eigen::Matrix2d transformBetweenEdgePair(const Eigen::Matrix2d &originalEdgeStack, const Eigen::Matrix2d &targetEdgeStack);
-    Eigen::Matrix2d stretchCompressAxes(const Eigen::Matrix3d &transformBetweenWorldAndUvTriangles,
+
+    Eigen::Matrix2d stretchCompressAxesOld(const Eigen::Matrix3d &transformBetweenWorldAndUvTriangles,
                                         const Eigen::Matrix3d &closestRotationMatrixToIt,
                                         const Eigen::Matrix2d &transformBetweeenEdges);
+    Eigen::Matrix2d stretchCompressAxes(const Eigen::Matrix2d &transformBetweeenEdges, double &rs, double &rt);
     Eigen::Matrix2d stretchCompressAxes(const Eigen::Matrix3d &triangleStack,
                                         const Eigen::Matrix3d &targetTriangleStack,
-                                        const Eigen::Matrix3d &triangleUvTriangleStack);
+                                        const Eigen::Matrix3d &triangleUvTriangleStack,
+                                        double &rs, double &rt);
+    Eigen::Matrix2d transformOfEdges(const Eigen::Matrix3d &triangleStack,
+                                     const Eigen::Matrix3d &targetTriangleStack,
+                                     const Eigen::Matrix3d &triangleUvTriangleStack);
 
     Eigen::Matrix2d leftTopBlock(const Eigen::Matrix3d &triangleStack);
     Eigen::Matrix2d edgeStack (const Eigen::MatrixXd &orig);

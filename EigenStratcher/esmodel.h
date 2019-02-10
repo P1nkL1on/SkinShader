@@ -15,7 +15,6 @@ public:
 
 //    static EsModel createTestModel (const int modelIndex = 0);
 
-
     QVector<Eigen::Vector3d> v() const;
     QVector<Eigen::Vector2d> vt() const;
     QVector<int> s() const;

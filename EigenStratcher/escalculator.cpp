@@ -84,20 +84,7 @@ Matrix2d EsCalculator::edgeStack(const MatrixXd &orig)
     return res;
 }
 
-
-Matrix2d EsCalculator::stretchCompressAxes(const Matrix3d &transformBetweenWorldAndUvTriangles,
-                                           const Matrix3d &closestRotationMatrixToIt,
-                                           const Matrix2d &transformBetweeenEdges)
-{
-    // (13)
-    // T --> svd
-    // T = U1 * sig1 * V1
-    // ret S = Q * R^t * V1
-    JacobiSVD<Matrix2d> svd(transformBetweeenEdges, ComputeFullU | ComputeFullV);
-    return leftTopBlock(transformBetweenWorldAndUvTriangles * closestRotationMatrixToIt.transpose()) * svd.matrixV();;
-}
-
-Matrix2d EsCalculator::stretchCompressAxes(const Matrix3d &triangleStack, const Matrix3d &targetTriangleStack, const Matrix3d &triangleUvTriangleStack)
+Matrix2d EsCalculator::transformOfEdges(const Matrix3d &triangleStack, const Matrix3d &targetTriangleStack, const Matrix3d &triangleUvTriangleStack)
 {
     // centrate
     const Matrix3d Vg0 = centredTriangleStack(triangleStack);
@@ -117,9 +104,35 @@ Matrix2d EsCalculator::stretchCompressAxes(const Matrix3d &triangleStack, const 
     const Matrix2d e12 = edgeStack(R0 * Vg0);
     const Matrix2d e12_R = edgeStack(RT * VgT);
     // T = ...
-    const Matrix2d T = transformBetweenEdgePair(e12, e12_R);
-    //
-    const Matrix2d S = stretchCompressAxes(Q0, R0, T);
-    //
-    return S;
+    return transformBetweenEdgePair(e12, e12_R);
 }
+
+Matrix2d EsCalculator::stretchCompressAxesOld(const Matrix3d &transformBetweenWorldAndUvTriangles,
+                                           const Matrix3d &closestRotationMatrixToIt,
+                                           const Matrix2d &transformBetweeenEdges)
+{
+    // (13)
+    // T --> svd
+    // T = U1 * sig1 * V1
+    // ret S = Q * R^t * V1
+    const JacobiSVD<Matrix2d> svd(transformBetweeenEdges, ComputeFullU | ComputeFullV);
+    return leftTopBlock(transformBetweenWorldAndUvTriangles * closestRotationMatrixToIt.transpose()) * svd.matrixV();
+}
+
+Matrix2d EsCalculator::stretchCompressAxes(const Matrix2d &transformBetweeenEdges, double &rs, double &rt)
+{
+    // new approximate, cause strange things happen with R0, Q0, R1, Q1
+    const JacobiSVD<Matrix2d> svd(transformBetweeenEdges, ComputeFullU | ComputeFullV);
+    rs = svd.singularValues()(0,0);
+    rt = svd.singularValues()(1,0);
+    return svd.matrixV();
+}
+
+Matrix2d EsCalculator::stretchCompressAxes(const Matrix3d &triangleStack,
+                                           const Matrix3d &targetTriangleStack,
+                                           const Matrix3d &triangleUvTriangleStack,
+                                           double &rs, double &rt)
+{
+    return stretchCompressAxes(transformOfEdges(triangleStack, targetTriangleStack, triangleUvTriangleStack), rs, rt);
+}
+

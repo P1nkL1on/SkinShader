@@ -8,12 +8,11 @@ void EsDrawer::setScale(const double scaling)
     m_scaling = scaling;
 }
 
-QColor mixColor(double k){
-    const int val = int(k * 255);
-    return QColor(val,val,val);
+QColor mixColor(double k, const QColor original){
+    return QColor(int(original.red() * k),int(original.green() * k),int(original.blue() * k));
 }
 
-void EsDrawer::drawModel(QPainter *painter, const EsModel &model) const
+void EsDrawer::drawModel(QPainter *painter, const EsModel &model, const QColor clr) const
 {
     const auto v = model.v();
     const auto vt = model.vt();
@@ -23,13 +22,14 @@ void EsDrawer::drawModel(QPainter *painter, const EsModel &model) const
     if (st.length() % 3 != 0)
         return;
     for (int i = 0; i < st.length(); i+=3)
-        drawTriangleUVmonocolor(painter, vt[st[i]], vt[st[i + 1]], vt[st[i + 2]], 4 - i / 3,mixColor(1.0 * i / st.length()));
+        drawTriangleUVmonocolor(painter, vt[st[i]], vt[st[i + 1]], vt[st[i + 2]], 4 - i / 3,mixColor(.5 + .5 * i / st.length(), clr));
 
     drawSystemG(painter, 5.0);
+    drawSystemUV(painter);
 
     const int polygonCount = s.length() / 3;
     for (int i = 0; i < s.length(); i+=3)
-        drawTriangleGmonocolor(painter, v[s[i]], v[s[i + 1]], v[s[i + 2]], 2, mixColor(1.0 * (i/3) / polygonCount));
+        drawTriangleGmonocolor(painter, v[s[i]], v[s[i + 1]], v[s[i + 2]], 2, mixColor(.5 + .5 * (i/3) / polygonCount, clr));
 }
 
 void EsDrawer::drawSystemG(QPainter *painter, const double scale) const
@@ -167,7 +167,7 @@ void EsDrawer::drawTriDotTriangle(QPainter *painter, const QVector<QVector2D> &d
         << QPoint(dots[2].x(), dots[2].y());
     const int cl = colorSwap % 3;
     ++colorSwap;
-    painter->setBrush(QColor(triangleColors[cl].red(),triangleColors[cl].green(), triangleColors[cl].blue(), 50));
+    painter->setBrush(QColor(triangleColors[cl].red(),triangleColors[cl].green(), triangleColors[cl].blue(), 125));
     painter->drawPolygon(p);
     return;
     for (int from = 0; from < 3; ++from){
