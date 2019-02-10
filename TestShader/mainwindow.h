@@ -2,9 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "planevectortests.h"
-#include "crossshading.h"
-#include "planevectordrawer.h"
+#include "Shading/planevectortests.h"
+#include "Shading/trianglespeller.h"
 
 namespace Ui {
 class MainWindow;

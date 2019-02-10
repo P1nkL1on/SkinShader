@@ -22,25 +22,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+include (Shading/ShadingTests.pri)
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-    planevector.cpp \
-    planevectordrawer.cpp \
-    crossshading.cpp \
-    planevectortests.cpp \
-    point.cpp \
-    trianglespeller.cpp
+        mainwindow.cpp
 
 HEADERS += \
-        mainwindow.h \
-    planevector.h \
-    planevectordrawer.h \
-    crossshading.h \
-    planevectortests.h \
-    point.h \
-    trianglespeller.h
+        mainwindow.h
 
 FORMS += \
         mainwindow.ui

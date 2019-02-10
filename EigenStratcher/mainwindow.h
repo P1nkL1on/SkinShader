@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "escalculatortests.h"
+#include "StretchCalculator/escalculatortests.h"
 #include "escalculatorhelp.h"
 namespace Ui {
 class MainWindow;

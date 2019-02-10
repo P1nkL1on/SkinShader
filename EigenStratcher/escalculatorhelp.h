@@ -1,8 +1,8 @@
 #ifndef ESCALCULATORHELP_H
 #define ESCALCULATORHELP_H
 
-#include "escalculator.h"
-#include "esdrawer.h"
+#include "StretchCalculator/escalculator.h"
+#include "StretchCalculator/esdrawer.h"
 
 namespace EsCalculatorHelp{
 
