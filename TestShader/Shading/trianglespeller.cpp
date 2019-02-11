@@ -75,7 +75,9 @@ void TriangleSpeller::fillTexture(PlaneVector &texture, PlaneVector &drawTo,
         int XAint = int(XA);
         int XBint = int(XB);
         for (int j = XAint; j < XBint; ++j ){
-            ballicentrate(j, Y0 + i, X0, Y0, X1, Y1, X2, Y2, a,b,c);
+            ballicentrate(j, Y0 + i, x0, y0, x1, y1, x2, y2, a,b,c);
+            if (a < 0) a = 0; if (b < 0) b = 0; if (c < 0) c = 0;
+
             xt = (xt0 * a + xt1 * b + xt2 * c) * texture.width();
             yt =( yt0 * a + yt1 * b + yt2 * c) * texture.height();
 

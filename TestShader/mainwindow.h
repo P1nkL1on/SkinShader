@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "Shading/planevectortests.h"
 #include "Shading/trianglespeller.h"
+#include "Shading/planevectordrawer.h"
+#include "Shading/crossshading.h"
 
 namespace Ui {
 class MainWindow;

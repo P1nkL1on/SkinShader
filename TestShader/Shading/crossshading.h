@@ -17,7 +17,7 @@ public:
     void blurCross(
             const PlaneVector &originalImage,
             PlaneVector &resultImage,
-            const double r, const double directX, const double directY,
+            const double rs, const double rt, const double directX, const double directY,
             const int interpolationType) const;
 private:
     double getC(const int center, const double tan, const int number, const int max) const;

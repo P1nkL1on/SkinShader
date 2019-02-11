@@ -15,11 +15,11 @@ QColor mixColor(double k, const QColor original){
 void EsDrawer::drawModel(QPainter *painter, const EsModel &model, const QColor clr) const
 {
     vector<int> res;
-    drawModel(painter, model, clr, res);
+    drawModel(painter, model, res, clr);
 }
 
-void EsDrawer::drawModel(QPainter *painter, const EsModel &model, const QColor clr,
-                         std::vector<int> &resVertices) const
+void EsDrawer::drawModel(QPainter *painter, const EsModel &model,
+                         std::vector<int> &resVertices, const QColor clr) const
 {
     const auto v = model.v();
     const auto vt = model.vt();
@@ -34,10 +34,17 @@ void EsDrawer::drawModel(QPainter *painter, const EsModel &model, const QColor c
     drawSystemG(painter, 5.0);
     drawSystemUV(painter);
 
-    const int polygonCount = s.length() / 3;
-    for (int i = 0; i < s.length(); i+=3)
-        drawTriangleGmonocolor(painter, v[s[i]], v[s[i + 1]], v[s[i + 2]], 2, mixColor(.5 + .5 * (i/3) / polygonCount, clr));
+    resVertices = std::vector<int>(s.length() * 2);
+    std::fill(resVertices.begin(), resVertices.end(), 0.0);
 
+    const int polygonCount = s.length() / 3;
+    for (int i = 0; i < s.length(); i+=3){
+        drawTriangleGmonocolor(painter, v[s[i]], v[s[i + 1]], v[s[i + 2]], 2, mixColor(.5 + .5 * (i/3) / polygonCount, clr));
+        for (int j = 0; j < 3; ++j){
+            resVertices[(i + j) * 2] = translateVec3(v[s[i + j]]).x();
+            resVertices[(i + j) * 2 + 1] = translateVec3(v[s[i + j]]).y();
+        }
+    }
 }
 
 void EsDrawer::drawSystemG(QPainter *painter, const double scale) const

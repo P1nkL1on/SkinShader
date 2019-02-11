@@ -104,10 +104,13 @@ double PlaneVector::bilinearInterpolateCoordinate(const float x, const float y) 
 {
     const int pX = std::floor(x);
     const int pY = std::floor(y);
-    //qDebug() << pX << pY << width() << height() << (x - pX)<<( y - pY);
-    return bilinearInterpolate(x - pX, y - pY,
-                               getValue(pX, pY), getValue(std::min(pX + 1, width() - 1), pY),
-                               getValue(pX, std::min(pY + 1, height() - 1)), getValue(std::min(pX + 1, width() - 1), std::min(pY + 1, height() - 1)));
+
+    const double v00 = getValue(std::min(pX, width() - 1), std::min(pY, height() - 1));
+    const double v10 = getValue(std::min(pX + 1, width() - 1), std::min(pY, height() - 1));
+    const double v01 = getValue(std::min(pX, width() - 1), std::min(pY + 1, height() - 1));
+    const double v11 = getValue(std::min(pX + 1, width() - 1), std::min(pY + 1, height() - 1));
+
+    return bilinearInterpolate(x - pX, y - pY, v00, v10, v01, v11);
 }
 
 double PlaneVector::bilinearInterpolate(const float x, const float y, const double a00, const double a10, const double a01, const double a11)

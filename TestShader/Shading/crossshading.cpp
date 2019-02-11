@@ -73,12 +73,12 @@ void CrossShading::blurInDirection(
 }
 
 void CrossShading::blurCross(const PlaneVector &originalImage, PlaneVector &resultImage,
-                             const double r, const double directX, const double directY,
+                             const double rs, const double rt, const double directX, const double directY,
                              const int interpolationType) const
 {
     const double boost = .1;
-    blurInDirection(originalImage, resultImage, r + boost, directX, directY, interpolationType);
-    blurInDirection(originalImage, resultImage, r - boost, directY, directX, interpolationType);
+    blurInDirection(originalImage, resultImage, rs + boost, directX, directY, interpolationType);
+    blurInDirection(originalImage, resultImage, rt - boost, directY, directX, interpolationType);
 }
 
 double CrossShading::getC(const int center, const double tan, const int number, const int max) const
