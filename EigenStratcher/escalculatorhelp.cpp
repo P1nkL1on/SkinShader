@@ -147,9 +147,9 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
     const QVector<Vector2d> vt = {makeVector2D(.0, .0), makeVector2D(.0, 1.0), makeVector2D(.6, .0),makeVector2D(.6, 1.0), makeVector2D(1.0, .0)};
     QVector<Vector3d> v2 = v;
     for (int i = 0; i < v.length(); ++i){
-        v2[i] += makeVector3D(5.0, .0, .0);
-        if (i == 0)
-            v2[i] += .02 * (makeVector3D(-(++offset), +(offset), 0));
+        v2[i] += makeVector3D(5.0, .0, .0) + MatrixXd::Random(3, 1) * .2;
+//        if (i == 0)
+//            v2[i] += .02 * (makeVector3D(-(++offset), +(offset), 0));
     }
 //    const QVector<Vector2d> vt = {makeVector2D(.0, .0), makeVector2D(.4, .0), makeVector2D(.0, .6), makeVector2D(1.0, .0), makeVector2D(.5, .6)};
 //    const QVector<int> s = {0,1,2,  2,1,3,   3,1,4};
@@ -177,18 +177,15 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
         dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .1 * rs, QColor(0,250,250), 2);
         dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(250,250,0), 2);
 
-        if (polIndex == 0){
-            CrossShading cs = CrossShading();
-            const int i = polIndex;
-            cs.blurPixelsInTriangleCross(
-                     D, DS,
-                     float(vt[st[i]](0,0)), float(vt[st[i]](1,0)),
-                     float(vt[st[i + 1]](0,0)), float(vt[st[i + 1]](1,0)),
-                     float(vt[st[i + 2]](0,0)), float(vt[st[i + 2]](1,0)),
-                     rs, rt, S(0,0), S(1,0), 2);
-        }
+        CrossShading cs = CrossShading();
+        const int i = polIndex;
+        cs.blurPixelsInTriangleCross(
+             D, DS,
+             float(vt[st[i]](0,0)), float(vt[st[i]](1,0)),
+             float(vt[st[i + 1]](0,0)), float(vt[st[i + 1]](1,0)),
+             float(vt[st[i + 2]](0,0)), float(vt[st[i + 2]](1,0)),
+             rs, rt, S(0,0), S(1,0), 2);
     }
-
     for (int i = 0; i < modelDots.size(); i += 6){ // poly index
         TriangleSpeller::fillTexture(D, Dfin,
                 float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
