@@ -179,7 +179,13 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
 
         if (polIndex == 0){
             CrossShading cs = CrossShading();
-            cs.blurCross(D, DS, rs, rt, S(0,0), S(1,0), 2);
+            const int i = polIndex;
+            cs.blurPixelsInTriangleCross(
+                     D, DS,
+                     float(vt[st[i]](0,0)), float(vt[st[i]](1,0)),
+                     float(vt[st[i + 1]](0,0)), float(vt[st[i + 1]](1,0)),
+                     float(vt[st[i + 2]](0,0)), float(vt[st[i + 2]](1,0)),
+                     rs, rt, S(0,0), S(1,0), 2);
         }
     }
 
