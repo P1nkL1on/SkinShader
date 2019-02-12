@@ -29,11 +29,13 @@ include(../TestShader/Shading/ShadingTests.pri);
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        escalculatorhelp.cpp
+        escalculatorhelp.cpp \
+    estexturer.cpp
 
 HEADERS += \
         mainwindow.h \
-        escalculatorhelp.h
+        escalculatorhelp.h \
+    estexturer.h
 
 FORMS += \
         mainwindow.ui

@@ -11,7 +11,7 @@ public:
     PlaneVectorDrawer();
     void paint(QPainter *qp, const PlaneVector &vec, const int x = 0, const int y = 0) const;
     QImage paint(const PlaneVector &vec) const;
-    int mash = 1;
+    int mash = 5;
 private:
 
     double minGraduationValue = 0;

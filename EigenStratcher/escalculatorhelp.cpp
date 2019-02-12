@@ -4,6 +4,8 @@
 #include "Shading/trianglespeller.h"
 #include "Shading/crossshading.h"
 
+#include "estexturer.h"
+
 using namespace EsCalculator;
 using namespace Eigen;
 using namespace std;
@@ -136,7 +138,7 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
 //    PlaneVector Dfin = PlaneVector(600, 600);
 //    D = D.changeSize(size, size, 1);
 
-//    PlaneVectorDrawer p = PlaneVectorDrawer();
+    PlaneVectorDrawer p = PlaneVectorDrawer();
 //    p.mash = pixelPerPixel;
 //    p.paint(qp,D, 20, 50);
 
@@ -189,6 +191,20 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
 
     const QVector<Matrix2d> vertTs =
             transformOfEdgesForEachVertex(v, v2, vt, s, st);
+    const int textureSize = 100;
+    PlaneVector D = PlaneVector("test.jpeg");
+    D = D.changeSize(textureSize, textureSize, 2);
+    PlaneVector Dsmooth = EsTexturer::applyInterpolatedTransforms(D, vertTs, vt, st);
+    p.paint(qp, D, 425, 25);
+    p.paint(qp, Dsmooth, 445 + textureSize * p.mash, 25);
+
+
+//    return;
+
+
+
+
+
     // drawing only
     for (int vIndex = 0; vIndex < v.length(); ++vIndex){
         double rs, rt;
@@ -197,11 +213,11 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
         dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .1 * rs, QColor(89, 100, 155), 2);
 //        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(252, 113, 162), 2);
     }
-    const int textureWidth = 20;
-    const int textureHeight = 20;
+    const int textureWidth = 40;
+    const int textureHeight = 40;
 
-    for (int i = 0; i < textureWidth; ++i){
-        for (int j = 0; j < textureHeight; ++j){
+    for (int i = 0; i <= textureWidth; ++i){
+        for (int j = 0; j <= textureHeight; ++j){
             for (int p = 0; p < st.length(); p += 3){
                 float a, b, c;
                 TriangleSpeller::ballicentrate(float(i) / textureWidth, float(j) / textureHeight,

@@ -142,8 +142,8 @@ QVector<Matrix2d> EsCalculator::transformOfEdgesForEachVertex(
         const QVector<Vector2d> &textureVertices,
         const QVector<int> &polygonIndices, const QVector<int> &texturePolygonIndices)
 {
-    QVector<Matrix2d> eachVertexT = QVector<Matrix2d>(vertices.length());   // {sigT, sigT, sigT..}
-    QVector<int> eachVertexMatrixSummCount = QVector<int>(vertices.length()); // {3, 3, 2, 1, 1, ...}
+    QVector<Matrix2d> eachVertexT = QVector<Matrix2d>(textureVertices.length());   // {sigT, sigT, sigT..}
+    QVector<int> eachVertexMatrixSummCount = QVector<int>(textureVertices.length()); // {3, 3, 2, 1, 1, ...}
     eachVertexT.fill(Matrix2d::Zero());
     eachVertexMatrixSummCount.fill(0);
 
@@ -158,7 +158,7 @@ QVector<Matrix2d> EsCalculator::transformOfEdgesForEachVertex(
         }
         const Matrix2d T = transformOfEdges(worldPolygonOriginal, worldPolygonChanged, polygonUV);
         for (int polVertInd = 0; polVertInd < 3; ++polVertInd){
-            const int vertIndex = polygonIndices[polyIndex * 3 + polVertInd];
+            const int vertIndex = texturePolygonIndices[polyIndex * 3 + polVertInd];
             eachVertexT[vertIndex] += T;
             eachVertexMatrixSummCount[vertIndex] ++;
         }
