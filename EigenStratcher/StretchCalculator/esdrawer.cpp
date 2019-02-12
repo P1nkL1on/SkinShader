@@ -101,20 +101,20 @@ void EsDrawer::drawTriangleG(QPainter *painter,
     if (triangleColors.length() != 3)
         return;
     QVector<QVector2D> planeC = { translateVec3(v1), translateVec3(v2), translateVec3(v3) };
-    for (int i = 0; i < 3; ++i){
-        Vector3d proect = (i == 0)? v1 : ((i == 1)? v2 : v3);
+//    for (int i = 0; i < 3; ++i){
+//        Vector3d proect = (i == 0)? v1 : ((i == 1)? v2 : v3);
 
-        Vector3d from = proect;
-        from(1, 0) = 0.0;
-        Vector3d from2 = from;
-        from2(0,0) = 0.0;
-        Vector3d from3 = from;
-        from3(2,0) = 0.0;
-        drawLine(painter, proect, from, Qt::green);
-        drawLine(painter, from2, from, Qt::red);
-        drawLine(painter, from3, from, Qt::blue);
+//        Vector3d from = proect;
+//        from(1, 0) = 0.0;
+//        Vector3d from2 = from;
+//        from2(0,0) = 0.0;
+//        Vector3d from3 = from;
+//        from3(2,0) = 0.0;
+//        drawLine(painter, proect, from, Qt::green);
+//        drawLine(painter, from2, from, Qt::red);
+//        drawLine(painter, from3, from, Qt::blue);
 
-    }
+//    }
     drawTriDotTriangle(painter, planeC, lineWidth, triangleColors);
 }
 

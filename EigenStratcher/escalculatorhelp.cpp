@@ -4,6 +4,9 @@
 #include "Shading/trianglespeller.h"
 #include "Shading/crossshading.h"
 
+#include "geometrystacktriangulated2.h"
+
+
 using namespace EsCalculator;
 using namespace Eigen;
 using namespace std;
@@ -122,40 +125,65 @@ int tfx(const int X){
     return (X - 1950) / 2 + 450;
 }
 int tfy(const int Y){
-     return (Y - 1000) / 2 + 450;
+    return (Y - 1000) / 2 + 450;
 }
 
-int offset = 0;
+//int offset = 0;
 
 void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
 {
-//    const int size = 100;
-//    const int pixelPerPixel = 400 / size;
-//    PlaneVector D = PlaneVector("test.png");
-//    PlaneVector DS = PlaneVector(size, size);
-//    PlaneVector Dfin = PlaneVector(600, 600);
-//    D = D.changeSize(size, size, 1);
+    //    const int size = 100;
+    //    const int pixelPerPixel = 400 / size;
+    //    PlaneVector D = PlaneVector("test.png");
+    //    PlaneVector DS = PlaneVector(size, size);
+    //    PlaneVector Dfin = PlaneVector(600, 600);
+    //    D = D.changeSize(size, size, 1);
 
-//    PlaneVectorDrawer p = PlaneVectorDrawer();
-//    p.mash = pixelPerPixel;
-//    p.paint(qp,D, 20, 50);
+    //    PlaneVectorDrawer p = PlaneVectorDrawer();
+    //    p.mash = pixelPerPixel;
+    //    p.paint(qp,D, 20, 50);
 
-//    const QVector<Vector3d> v = {makeVector3D(.0, .8, 5.0), makeVector3D(.6, 1.8,4.6), makeVector3D(1.5, -.8, 5.2),
-//                                 makeVector3D(2.0, 1.2, 5.0), makeVector3D(1.1, 3.8, 4.0)};
-    const QVector<Vector3d> v = {makeVector3D(.2, .2, .15), makeVector3D(.2, -4.0, .15), makeVector3D(2.6, .2, .15),
-                                 makeVector3D(2.6, -4.0, .15), makeVector3D(4.0, .2, .15)};
-    const QVector<Vector2d> vt = {makeVector2D(.0, .0), makeVector2D(.0, 1.0), makeVector2D(.6, .0),makeVector2D(.6, 1.0), makeVector2D(1.0, .0)};
-    QVector<Vector3d> v2 = v;
-    for (int i = 0; i < v.length(); ++i){
-        v2[i] += makeVector3D(5.0, .0, .0) + MatrixXd::Random(3, 1) * .2;
-//        if (i == 0)
-//            v2[i] += .02 * (makeVector3D(-(++offset), +(offset), 0));
+//    const QString pathToGeom = "/home/daiver/R3DS/Kirill/models/SphereWithUV.obj";
+    const QString pathToGeom = "/home/daiver/R3DS/Prohor/Cube.obj";
+//    const QString pathToGeom = "/home/daiver/R3DS/Prohor/pyramide.obj";
+    //"/home/daiver/R3DS/Kirill/models/hand/HandTo.obj";
+    //"/home/daiver/R3DS/Kirill/models/simple/cube.obj";
+
+    const GeometryStack2::GeomStackTriangulated *geom = new GeometryStack2::GeomStackTriangulated(pathToGeom);
+    GeometryStack2::GeomStackTriangulated *geom2 = new GeometryStack2::GeomStackTriangulated(*geom);
+
+    QMatrix4x4 transformation;
+    transformation.scale(1.2, 1, 1);
+//    transformation.scale(1.0, 1, 1.1);
+//    transformation.scale(1.0, 1.1, 1);
+//    GeometryStack2::transformVertices(transformation, geom2->v);
+    geom2->v[0] *= 1.2;
+
+    //    const QVector<Vector3d> v = {makeVector3D(.2, .2, .15), makeVector3D(.2, -4.0, .15), makeVector3D(2.6, .2, .15),
+    //                                 makeVector3D(2.6, -4.0, .15), makeVector3D(4.0, .2, .15)};
+    //    const QVector<Vector2d> vt = {makeVector2D(.0, .0), makeVector2D(.0, 1.0), makeVector2D(.6, .0),makeVector2D(.6, 1.0), makeVector2D(1.0, .0)};
+    //    QVector<Vector3d> v2 = v;
+    //    for (int i = 0; i < v.length(); ++i){
+    //        v2[i] += makeVector3D(5.0, .0, .0) + MatrixXd::Random(3, 1) * .2;
+    //    }
+    //    const QVector<int> s = {0,2, 1,  2, 3, 1,  4, 3, 2};
+    //    const QVector<int> st = {0,2, 1,  2, 3, 1,  4, 3, 2};
+
+
+    QVector<Vector3d> v = QVector<Vector3d>(geom->v.length());
+    QVector<Vector3d> v2 = QVector<Vector3d>(geom->v.length());
+
+    QVector<Vector2d> vt = QVector<Vector2d>(geom->vt.length());
+    for (int i = 0; i < geom->v.length(); ++i){
+        v[i] = makeVector3D(geom->v[i].x(), geom->v[i].y(), geom->v[i].z());
+        v2[i] = makeVector3D(geom2->v[i].x(), geom2->v[i].y(), geom2->v[i].z());
     }
-//    const QVector<Vector2d> vt = {makeVector2D(.0, .0), makeVector2D(.4, .0), makeVector2D(.0, .6), makeVector2D(1.0, .0), makeVector2D(.5, .6)};
-//    const QVector<int> s = {0,1,2,  2,1,3,   3,1,4};
-//    const QVector<int> st { 4, 1, 3,  2,1,4,  2,0,1 };
-    const QVector<int> s = {0,2, 1,  2, 3, 1,  4, 3, 2};
-    const QVector<int> st = {0,2, 1,  2, 3, 1,  4, 3, 2};
+    for (int i = 0; i < vt.length(); ++i)
+        vt[i] = makeVector2D(geom->vt[i].x(), geom->vt[i].y());
+    const QVector<int> s = geom->triangleVertexIndices;
+    const QVector<int> st = geom->triangleTexCoordIndices;
+
+
 
     EsModel model = EsModel(v, vt, s, st);
     EsModel model2 = EsModel(v2, vt, s, st);
@@ -174,38 +202,41 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
         const Matrix2d S = stretchCompressAxes(poly, polyTarg, polyUV, rs, rt);
         Matrix3d centredUV;
         const Vector2d uvCenter = centredTriangleStack(polyUV, centredUV).head(2);
-        dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .1 * rs, QColor(0,250,250), 2);
-        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(250,250,0), 2);
+        dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .02, QColor(0,250,250), 2);
+        dr->drawLine(qp, uvCenter, uvCenter, Qt::red, 3);
+//        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .01, QColor(250,250,0), 2);
 
-//        CrossShading cs = CrossShading();
-//        const int i = polIndex;
-//        cs.blurPixelsInTriangleCross(
-//             D, DS,
-//             float(vt[st[i]](0,0)), float(vt[st[i]](1,0)),
-//             float(vt[st[i + 1]](0,0)), float(vt[st[i + 1]](1,0)),
-//             float(vt[st[i + 2]](0,0)), float(vt[st[i + 2]](1,0)),
-//             rs, rt, S(0,0), S(1,0), 2);
+        qDebug() << polIndex << rs << rt;
+        //        CrossShading cs = CrossShading();
+        //        const int i = polIndex;
+        //        cs.blurPixelsInTriangleCross(
+        //             D, DS,
+        //             float(vt[st[i]](0,0)), float(vt[st[i]](1,0)),
+        //             float(vt[st[i + 1]](0,0)), float(vt[st[i + 1]](1,0)),
+        //             float(vt[st[i + 2]](0,0)), float(vt[st[i + 2]](1,0)),
+        //             rs, rt, S(0,0), S(1,0), 2);
     }
 
     const QVector<Matrix2d> vertTs =
             transformOfEdgesForEachVertex(v, v2, vt, s, st);
     // drawing only
-    for (int vIndex = 0; vIndex < v.length(); ++vIndex){
+    for (int vIndex = 0; vIndex < vt.length(); ++vIndex){
         double rs, rt;
         const Matrix2d S = stretchCompressAxes(vertTs[vIndex], rs, rt);
         const Vector2d uvCenter = vt[vIndex];
         dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .1 * rs, QColor(89, 100, 155), 2);
-//        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(252, 113, 162), 2);
+        //        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(252, 113, 162), 2);
+        qDebug() << vIndex << rs << rt;
     }
-    const int textureWidth = 20;
-    const int textureHeight = 20;
+    const int textureWidth = 80;
+    const int textureHeight = 80;
 
     for (int i = 0; i < textureWidth; ++i){
         for (int j = 0; j < textureHeight; ++j){
             for (int p = 0; p < st.length(); p += 3){
                 float a, b, c;
                 TriangleSpeller::ballicentrate(float(i) / textureWidth, float(j) / textureHeight,
-                        float(vt[st[p]](0,0)),float(vt[st[p]](1,0)),
+                                               float(vt[st[p]](0,0)),float(vt[st[p]](1,0)),
                         float(vt[st[p + 1]](0,0)),float(vt[st[p + 1]](1,0)),
                         float(vt[st[p + 2]](0,0)),float(vt[st[p + 2]](1,0)),
                         a,b,c);
@@ -223,33 +254,32 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
                 const Vector2d uF = uvCenter + S.col(0) * (-.025 * rs);
                 const Vector2d uT = uvCenter + S.col(0) * (.025 * rs);
 
-                dr->drawLine(qp, uF, uT, QColor(129, 170, 255), 2);
+                dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * (rs - 1.0) * .3, QColor(129, 170, 255), 2);
                 dr->drawLine(qp, uvCenter, uvCenter, Qt::red, 3);
-
                 //dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .05 * rt, QColor(252, 213, 222), 2);
             }
         }
     }
 
-//    for (int i = 0; i < modelDots.size(); i += 6){ // poly index
-//        TriangleSpeller::fillTexture(D, Dfin,
-//                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
-//                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
-//                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
-//                tfx(modelDots[i]), tfy(modelDots[i + 1]),
-//                tfx(modelDots[i + 2]), tfy(modelDots[i + 3]),
-//                tfx(modelDots[i + 4]), tfy(modelDots[i + 5]));
-//        TriangleSpeller::fillTexture(DS, Dfin,
-//                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
-//                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
-//                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
-//                tfx(model2Dots[i]), tfy(model2Dots[i + 1]),
-//                tfx(model2Dots[i + 2]), tfy(model2Dots[i + 3]),
-//                tfx(model2Dots[i + 4]), tfy(model2Dots[i + 5]));
-//    }
-//    p.paint(qp, DS, 550, 50);
-//    p.mash = 1;
-//    p.paint(qp,Dfin, 150, 470);
+    //    for (int i = 0; i < modelDots.size(); i += 6){ // poly index
+    //        TriangleSpeller::fillTexture(D, Dfin,
+    //                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
+    //                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
+    //                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
+    //                tfx(modelDots[i]), tfy(modelDots[i + 1]),
+    //                tfx(modelDots[i + 2]), tfy(modelDots[i + 3]),
+    //                tfx(modelDots[i + 4]), tfy(modelDots[i + 5]));
+    //        TriangleSpeller::fillTexture(DS, Dfin,
+    //                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
+    //                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
+    //                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
+    //                tfx(model2Dots[i]), tfy(model2Dots[i + 1]),
+    //                tfx(model2Dots[i + 2]), tfy(model2Dots[i + 3]),
+    //                tfx(model2Dots[i + 4]), tfy(model2Dots[i + 5]));
+    //    }
+    //    p.paint(qp, DS, 550, 50);
+    //    p.mash = 1;
+    //    p.paint(qp,Dfin, 150, 470);
 }
 
 Vector2d EsCalculatorHelp::makeVector2D(const double x, const double y)

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui testlib
+QT       += core gui testlib opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,12 +17,18 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
+CONFIG += c++14 object_parallel_to_source
+
+
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-include(../../QT-serious/modules/Eigen/Eigen.pri)
+#include(../../QT-serious/modules/Eigen/Eigen.pri)
+include(/home/daiver/R3DS/Kirill/AsRigidAsPossibleMeshDeformationTest01/CommonEigenRoutine/CommonEigenRoutine.pri)
+include(/home/daiver/R3DS/Kirill/WPrototypingUtils/WPrototypingUtils/WPrototypingUtils.pri)
+
 include(StretchCalculator/StretchCalculatorTests.pri);
 include(../TestShader/Shading/ShadingTests.pri);
 
