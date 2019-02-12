@@ -136,3 +136,36 @@ Matrix2d EsCalculator::stretchCompressAxes(const Matrix3d &triangleStack,
     return stretchCompressAxes(transformOfEdges(triangleStack, targetTriangleStack, triangleUvTriangleStack), rs, rt);
 }
 
+
+QVector<Matrix2d> EsCalculator::transformOfEdgesForEachVertex(
+        const QVector<Vector3d> &vertices, const QVector<Vector3d> &changedVertices,
+        const QVector<Vector2d> &textureVertices,
+        const QVector<int> &polygonIndices, const QVector<int> &texturePolygonIndices)
+{
+    QVector<Matrix2d> eachVertexT = QVector<Matrix2d>(vertices.length());   // {sigT, sigT, sigT..}
+    QVector<int> eachVertexMatrixSummCount = QVector<int>(vertices.length()); // {3, 3, 2, 1, 1, ...}
+    eachVertexT.fill(Matrix2d::Zero());
+    eachVertexMatrixSummCount.fill(0);
+
+    for (int polyIndex = 0; polyIndex < polygonIndices.length() / 3; ++polyIndex){
+        Matrix3d worldPolygonOriginal, worldPolygonChanged, polygonUV;
+        for (int vertInd = 0; vertInd < 3; ++vertInd){
+            worldPolygonOriginal.col(vertInd) = vertices[polygonIndices[polyIndex * 3 + vertInd]];
+            worldPolygonChanged.col(vertInd) = changedVertices[polygonIndices[polyIndex * 3 + vertInd]];
+            Vector3d columnUv = Vector3d::Zero();
+            columnUv.head(2) = textureVertices[texturePolygonIndices[polyIndex * 3 + vertInd]];
+            polygonUV.col(vertInd) = columnUv;
+        }
+        const Matrix2d T = transformOfEdges(worldPolygonOriginal, worldPolygonChanged, polygonUV);
+        for (int polVertInd = 0; polVertInd < 3; ++polVertInd){
+            const int vertIndex = polygonIndices[polyIndex * 3 + polVertInd];
+            eachVertexT[vertIndex] += T;
+            eachVertexMatrixSummCount[vertIndex] ++;
+        }
+    }
+    for (int vInd = 0; vInd < eachVertexT.length(); ++vInd)
+        if (eachVertexMatrixSummCount[vInd] > 0)
+            eachVertexT[vInd] /= double(eachVertexMatrixSummCount[vInd]);
+    return eachVertexT;
+}
+

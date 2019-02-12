@@ -30,7 +30,14 @@ public:
             const int x1, const int y1,
             const int x2, const int y2
             );
-
+    static void ballicentrate(
+            const float X, const float Y,
+            const float x1, const float y1,
+            const float x2, const float y2,
+            const float x3, const float y3,
+            float &m1,
+            float &m2,
+            float &m3);
 };
 
 #endif // TRIANGLESPELLER_H

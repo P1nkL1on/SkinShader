@@ -87,3 +87,15 @@ void TriangleSpeller::fillTexture(PlaneVector &texture, PlaneVector &drawTo,
         }
     }
 }
+
+void TriangleSpeller::ballicentrate(const float X, const float Y, const float x1, const float y1, const float x2, const float y2, const float x3, const float y3, float &m1, float &m2, float &m3)
+{
+    m3 = float((Y  - y1) * (x2 - x1) - (X  - x1)*(y2 - y1))
+            / ((y3 - y1) * (x2 - x1) - (x3 - x1)*(y2 - y1));
+
+    m2 = float((Y  - y1) * (x3 - x1) - (X  - x1)*(y3 - y1))
+            / ((y2 - y1) * (x3 - x1) - (x2 - x1)*(y3 - y1));
+
+    m1 = float((Y  - y3) * (x2 - x3) - (X  - x3)*(y2 - y3))
+            / ((y1 - y3) * (x2 - x3) - (x1 - x3)*(y2 - y3));
+}

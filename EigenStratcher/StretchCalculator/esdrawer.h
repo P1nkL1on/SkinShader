@@ -32,9 +32,9 @@ public:
 private:
     QVector2D translateVec3(const Eigen::Vector3d &v) const;
     QVector2D translateVec2(const Eigen::Vector2d &v, const bool isUV = true) const;
-    QVector2D m_centerG = QVector2D(1050, 600);
+    QVector2D m_centerG = QVector2D(550, 500);
     QVector2D m_centerUV = QVector2D(20, 50);
-    double m_scaling = 115.0;
+    double m_scaling = 55.0;
     int m_sizeUV = 400;
     double m_zToXProect = -.5;
     double m_zToYProect = .5;

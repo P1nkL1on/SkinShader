@@ -129,16 +129,16 @@ int offset = 0;
 
 void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
 {
-    const int size = 100;
-    const int pixelPerPixel = 400 / size;
-    PlaneVector D = PlaneVector("test.png");
-    PlaneVector DS = PlaneVector(size, size);
-    PlaneVector Dfin = PlaneVector(600, 600);
-    D = D.changeSize(size, size, 1);
+//    const int size = 100;
+//    const int pixelPerPixel = 400 / size;
+//    PlaneVector D = PlaneVector("test.png");
+//    PlaneVector DS = PlaneVector(size, size);
+//    PlaneVector Dfin = PlaneVector(600, 600);
+//    D = D.changeSize(size, size, 1);
 
-    PlaneVectorDrawer p = PlaneVectorDrawer();
-    p.mash = pixelPerPixel;
-    p.paint(qp,D, 20, 50);
+//    PlaneVectorDrawer p = PlaneVectorDrawer();
+//    p.mash = pixelPerPixel;
+//    p.paint(qp,D, 20, 50);
 
 //    const QVector<Vector3d> v = {makeVector3D(.0, .8, 5.0), makeVector3D(.6, 1.8,4.6), makeVector3D(1.5, -.8, 5.2),
 //                                 makeVector3D(2.0, 1.2, 5.0), makeVector3D(1.1, 3.8, 4.0)};
@@ -177,34 +177,79 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
         dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .1 * rs, QColor(0,250,250), 2);
         dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(250,250,0), 2);
 
-        CrossShading cs = CrossShading();
-        const int i = polIndex;
-        cs.blurPixelsInTriangleCross(
-             D, DS,
-             float(vt[st[i]](0,0)), float(vt[st[i]](1,0)),
-             float(vt[st[i + 1]](0,0)), float(vt[st[i + 1]](1,0)),
-             float(vt[st[i + 2]](0,0)), float(vt[st[i + 2]](1,0)),
-             rs, rt, S(0,0), S(1,0), 2);
+//        CrossShading cs = CrossShading();
+//        const int i = polIndex;
+//        cs.blurPixelsInTriangleCross(
+//             D, DS,
+//             float(vt[st[i]](0,0)), float(vt[st[i]](1,0)),
+//             float(vt[st[i + 1]](0,0)), float(vt[st[i + 1]](1,0)),
+//             float(vt[st[i + 2]](0,0)), float(vt[st[i + 2]](1,0)),
+//             rs, rt, S(0,0), S(1,0), 2);
     }
-    for (int i = 0; i < modelDots.size(); i += 6){ // poly index
-        TriangleSpeller::fillTexture(D, Dfin,
-                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
-                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
-                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
-                tfx(modelDots[i]), tfy(modelDots[i + 1]),
-                tfx(modelDots[i + 2]), tfy(modelDots[i + 3]),
-                tfx(modelDots[i + 4]), tfy(modelDots[i + 5]));
-        TriangleSpeller::fillTexture(DS, Dfin,
-                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
-                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
-                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
-                tfx(model2Dots[i]), tfy(model2Dots[i + 1]),
-                tfx(model2Dots[i + 2]), tfy(model2Dots[i + 3]),
-                tfx(model2Dots[i + 4]), tfy(model2Dots[i + 5]));
+
+    const QVector<Matrix2d> vertTs =
+            transformOfEdgesForEachVertex(v, v2, vt, s, st);
+    // drawing only
+    for (int vIndex = 0; vIndex < v.length(); ++vIndex){
+        double rs, rt;
+        const Matrix2d S = stretchCompressAxes(vertTs[vIndex], rs, rt);
+        const Vector2d uvCenter = vt[vIndex];
+        dr->drawLine(qp, uvCenter, uvCenter + S.col(0) * .1 * rs, QColor(89, 100, 155), 2);
+//        dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .1 * rt, QColor(252, 113, 162), 2);
     }
-    p.paint(qp, DS, 550, 50);
-    p.mash = 1;
-    p.paint(qp,Dfin, 150, 470);
+    const int textureWidth = 20;
+    const int textureHeight = 20;
+
+    for (int i = 0; i < textureWidth; ++i){
+        for (int j = 0; j < textureHeight; ++j){
+            for (int p = 0; p < st.length(); p += 3){
+                float a, b, c;
+                TriangleSpeller::ballicentrate(float(i) / textureWidth, float(j) / textureHeight,
+                        float(vt[st[p]](0,0)),float(vt[st[p]](1,0)),
+                        float(vt[st[p + 1]](0,0)),float(vt[st[p + 1]](1,0)),
+                        float(vt[st[p + 2]](0,0)),float(vt[st[p + 2]](1,0)),
+                        a,b,c);
+                if (!(a >= 0 && b >= 0 && c >= 0))
+                    continue;
+                const Matrix2d Tsv =
+                        vertTs[st[p]] * a
+                        + vertTs[st[p + 1]] * b
+                        + vertTs[st[p + 2]] * c;
+
+                double rs, rt;
+                const Matrix2d S = stretchCompressAxes(Tsv, rs, rt);
+
+                const Vector2d uvCenter = makeVector2D(float(i) / textureWidth, float(j) / textureHeight);
+                const Vector2d uF = uvCenter + S.col(0) * (-.025 * rs);
+                const Vector2d uT = uvCenter + S.col(0) * (.025 * rs);
+
+                dr->drawLine(qp, uF, uT, QColor(129, 170, 255), 2);
+                dr->drawLine(qp, uvCenter, uvCenter, Qt::red, 3);
+
+                //dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .05 * rt, QColor(252, 213, 222), 2);
+            }
+        }
+    }
+
+//    for (int i = 0; i < modelDots.size(); i += 6){ // poly index
+//        TriangleSpeller::fillTexture(D, Dfin,
+//                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
+//                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
+//                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
+//                tfx(modelDots[i]), tfy(modelDots[i + 1]),
+//                tfx(modelDots[i + 2]), tfy(modelDots[i + 3]),
+//                tfx(modelDots[i + 4]), tfy(modelDots[i + 5]));
+//        TriangleSpeller::fillTexture(DS, Dfin,
+//                float(vt[st[i / 2]](0,0)), float(vt[st[i / 2]](1,0)),
+//                float(vt[st[i / 2 + 1]](0,0)), float(vt[st[i / 2 + 1]](1,0)),
+//                float(vt[st[i / 2 + 2]](0,0)), float(vt[st[i / 2 + 2]](1,0)),
+//                tfx(model2Dots[i]), tfy(model2Dots[i + 1]),
+//                tfx(model2Dots[i + 2]), tfy(model2Dots[i + 3]),
+//                tfx(model2Dots[i + 4]), tfy(model2Dots[i + 5]));
+//    }
+//    p.paint(qp, DS, 550, 50);
+//    p.mash = 1;
+//    p.paint(qp,Dfin, 150, 470);
 }
 
 Vector2d EsCalculatorHelp::makeVector2D(const double x, const double y)
