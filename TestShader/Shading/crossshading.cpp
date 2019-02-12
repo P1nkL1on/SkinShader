@@ -79,6 +79,8 @@ void CrossShading::blurCross(const PlaneVector &originalImage, PlaneVector &resu
     PlaneVector timed = PlaneVector(originalImage.width(), originalImage.height());
     blurInDirection(originalImage, timed, rs + boost, directX, directY, interpolationType);
     blurInDirection(timed, resultImage, rt - boost, directY, directX, interpolationType);
+
+//    blurInDirection(originalImage, resultImage, rs + boost, directX, directY, interpolationType);
 }
 
 double CrossShading::blurPixelInDirection(const PlaneVector &originalImage,

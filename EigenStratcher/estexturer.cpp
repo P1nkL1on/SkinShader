@@ -3,6 +3,12 @@
 
 using namespace Eigen;
 
+Vector2d mk2d(const double x, const double y){
+    Vector2d d;
+    d << x, y;
+    return d;
+}
+
 PlaneVector EsTexturer::applyInterpolatedTransforms(
         const PlaneVector &texture,
         const QVector<Matrix2d> &eachUvVertexTransforms,
@@ -11,9 +17,15 @@ PlaneVector EsTexturer::applyInterpolatedTransforms(
 {
     const int w = texture.width(), h = texture.height();
 
-    PlaneVector result = PlaneVector(w, h);
+    PlaneVector result = PlaneVector(w, h),
+                tmpResult = PlaneVector(w, h),
+                rsMap =  PlaneVector(w, h),
+                rtMap =  PlaneVector(w, h),
+                Scol0x = PlaneVector(w, h),
+                Scol0y = PlaneVector(w, h);
 
     const int skipPixels = 0;
+    const int stretchBoost = .0;
 
     for (int i = 0; i < w; i += skipPixels + 1){
         for (int j = 0; j < h; j += skipPixels + 1){
@@ -44,10 +56,28 @@ PlaneVector EsTexturer::applyInterpolatedTransforms(
             // pixel stretches
             double rs, rt;
             const Matrix2d S = EsCalculator::stretchCompressAxes(Tpixel, rs, rt);
-            rs = std::min(rs, 1.4);
-            result.setValue(getPixelValueAfterStretching(texture, i, j, rs, S.col(0)), i, j);
+
+            // . . . set maps
+            rsMap.setValue( std::min(rs + stretchBoost, 1.4), i, j);
+            rtMap.setValue( std::max(rt - stretchBoost, .7), i, j);
+            Scol0x.setValue(S.col(0)(0,0), i, j);
+            Scol0y.setValue(S.col(0)(1,0), i, j);
+            //result.setValue(getPixelValueAfterStretching(texture, i, j, rs + stretchBoost, S.col(0)), i, j);
         }
     }
+    // stretch
+    for (int i = 0; i < w; ++i)
+        for (int j = 0; j < h; ++j)
+            tmpResult.setValue(getPixelValueAfterStretching(texture, i, j,
+            rsMap.getValue(i, j), mk2d(Scol0x.getValue(i, j), Scol0y.getValue(i, j))),
+            i, j);
+    // compress
+    for (int i = 0; i < w; ++i)
+        for (int j = 0; j < h; ++j)
+            result.setValue(getPixelValueAfterStretching(tmpResult, i, j,
+            rtMap.getValue(i, j), mk2d(Scol0y.getValue(i, j), Scol0x.getValue(i, j))),
+            i, j);
+
     return result;
 }
 // x,y,  x1,y1 ... x3,y3
@@ -91,11 +121,10 @@ double EsTexturer::getPixelValueAfterStretching(
     // direction is normilised!
     const Vector2d directionNormilised = direction / direction.norm();
     Vector2d pixelPosition;
-    pixelPosition(0, 0) = double(pixelX);
-    pixelPosition(1, 0) = double(pixelY);
+    pixelPosition << pixelX, pixelY;
 
     double gauseSummWeigth = 0;
-    double gausWeigths[rad];
+    double gausWeigths[rad + 1];
     for (int i = 0; i <= rad; ++i){
         const double pixelSideOffset = ( i - rad / 2.0) * numSigma / (rad - 1.0);
         gausWeigths[i] = exp(-.5 * pixelSideOffset * pixelSideOffset);
@@ -103,17 +132,13 @@ double EsTexturer::getPixelValueAfterStretching(
     }
 
     double resultValue = 0.0;
-
     for (int i = 0; i <= rad; ++i){
         const double pixelSigmaSideOffset = ( i - rad / 2.0) * numSigma / (rad + 1) * sigma;
         const double colorK = (((i == rad/2)? (1.0 - alpha) : (0.0)) + alpha * gausWeigths[i] / gauseSummWeigth);
-
-        //resultValue += getInVec(originalImage, x, y, xComponent, yComponent, pixelSigmaSideOffset, interpolationType) * colorK;
         Vector2d getColorFrom = pixelPosition + directionNormilised * pixelSigmaSideOffset;
         for (int d = 0; d < 2; ++d)
             getColorFrom(d,0) = std::max(.0, std::min(getColorFrom(d,0),  -1.0 + (d == 0? texture.width() : texture.height()) ));
         // fix corner problems ^^^
-        qDebug() << pixelX << pixelY << float(getColorFrom(0,0)) <<  float(getColorFrom(1,0));
         resultValue += colorK * texture.getValue(float(getColorFrom(0,0)), float(getColorFrom(1,0)), interpolationType);
     }
     return resultValue;

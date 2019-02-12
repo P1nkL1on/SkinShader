@@ -149,7 +149,7 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
     const QVector<Vector2d> vt = {makeVector2D(.0, .0), makeVector2D(.0, 1.0), makeVector2D(.6, .0),makeVector2D(.6, 1.0), makeVector2D(1.0, .0)};
     QVector<Vector3d> v2 = v;
     for (int i = 0; i < v.length(); ++i){
-        v2[i] += makeVector3D(5.0, .0, .0) + MatrixXd::Random(3, 1) * .2;
+        v2[i] += makeVector3D(5.0, .0, .0) + MatrixXd::Random(3, 1) * .5;
 //        if (i == 0)
 //            v2[i] += .02 * (makeVector3D(-(++offset), +(offset), 0));
     }
@@ -191,8 +191,8 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
 
     const QVector<Matrix2d> vertTs =
             transformOfEdgesForEachVertex(v, v2, vt, s, st);
-    const int textureSize = 100;
-    PlaneVector D = PlaneVector("test.jpeg");
+    const int textureSize = 120;
+    PlaneVector D = PlaneVector("test.jpg");
     D = D.changeSize(textureSize, textureSize, 2);
     PlaneVector Dsmooth = EsTexturer::applyInterpolatedTransforms(D, vertTs, vt, st);
     p.paint(qp, D, 425, 25);
@@ -236,11 +236,11 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
                 const Matrix2d S = stretchCompressAxes(Tsv, rs, rt);
 
                 const Vector2d uvCenter = makeVector2D(float(i) / textureWidth, float(j) / textureHeight);
-                const Vector2d uF = uvCenter + S.col(0) * (-.025 * rs);
-                const Vector2d uT = uvCenter + S.col(0) * (.025 * rs);
+                //const Vector2d uF = uvCenter + S.col(0) * (-.025 * rs);
+                const Vector2d uT = uvCenter + S.col(0) * .25 * ( rs - 1.0);
 
-                dr->drawLine(qp, uF, uT, QColor(129, 170, 255), 2);
-                dr->drawLine(qp, uvCenter, uvCenter, Qt::red, 3);
+                dr->drawLine(qp, uvCenter, uT, QColor(129, 170, 255), 2);
+                dr->drawLine(qp, uvCenter, uvCenter, Qt::red, 2);
 
                 //dr->drawLine(qp, uvCenter, uvCenter + S.col(1) * .05 * rt, QColor(252, 213, 222), 2);
             }

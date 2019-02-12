@@ -30,6 +30,8 @@ private:
     CrossShading *cs = new CrossShading();
 protected:
     void paintEvent(QPaintEvent *e);
+private slots:
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H
