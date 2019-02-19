@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "StretchCalculator/escalculatortests.h"
-#include "escalculatorhelp.h"
+#include "esprocesser.h"
 namespace Ui {
 class MainWindow;
 }
@@ -18,12 +18,17 @@ public:
 
 private:
     void runTests() const;
+
     Ui::MainWindow *ui;
-//    EsModel t = EsModel::createTestModel();
-    EsDrawer d = EsDrawer();
-    //EsCalculator c = EsCalculator();
+    EsProcesser *processer = new EsProcesser();
 protected:
     void paintEvent(QPaintEvent *e);
+private slots:
+    void on_actionLoad_Texture_triggered();
+    void on_actionLoad_Model_triggered();
+    void on_actionLoad_Stretched_Model_triggered();
+    void on_actionSave_Stretched_Texture_triggered();
+    void on_actionStretch_Texture_triggered();
 };
 
 #endif // MAINWINDOW_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>876</height>
+    <width>520</width>
+    <height>495</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,10 +19,28 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>520</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuLoad_Texture">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLoad_Texture"/>
+    <addaction name="actionLoad_Model"/>
+    <addaction name="actionLoad_Stretched_Model"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Stretched_Texture"/>
+   </widget>
+   <widget class="QMenu" name="menuExecute">
+    <property name="title">
+     <string>Execute</string>
+    </property>
+    <addaction name="actionStretch_Texture"/>
+   </widget>
+   <addaction name="menuLoad_Texture"/>
+   <addaction name="menuExecute"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -33,6 +51,31 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionLoad_Texture">
+   <property name="text">
+    <string>Load Texture</string>
+   </property>
+  </action>
+  <action name="actionLoad_Model">
+   <property name="text">
+    <string>Load Model</string>
+   </property>
+  </action>
+  <action name="actionLoad_Stretched_Model">
+   <property name="text">
+    <string>Load Stretched Model</string>
+   </property>
+  </action>
+  <action name="actionSave_Stretched_Texture">
+   <property name="text">
+    <string>Save Stretched Texture</string>
+   </property>
+  </action>
+  <action name="actionStretch_Texture">
+   <property name="text">
+    <string>Stretch Texture</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

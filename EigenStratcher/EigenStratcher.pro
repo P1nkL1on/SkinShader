@@ -30,12 +30,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         escalculatorhelp.cpp \
-    estexturer.cpp
+    estexturer.cpp \
+    esprocesser.cpp
 
 HEADERS += \
         mainwindow.h \
         escalculatorhelp.h \
-    estexturer.h
+    estexturer.h \
+    esprocesser.h
 
 FORMS += \
         mainwindow.ui

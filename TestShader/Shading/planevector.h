@@ -9,6 +9,7 @@
 class PlaneVector
 {
 public:
+    PlaneVector();
     PlaneVector(const int width, const int height);
     PlaneVector(const QImage &image);
     PlaneVector(const QString &imagePath);
@@ -37,10 +38,10 @@ public:
     double getValue(const Point xy) const;
     double getValue(const FPoint xy, const int flagInterpolation) const;
 private:
-    std::vector<double> m_values;
-    int m_width;    // x
-    int m_height;   // y
     void assertCoordinates (const int x, const int y) const;
+    std::vector<double> m_values;
+    int m_width = 0;    // x
+    int m_height = 0;   // y
 };
 
 #endif // PLANEVECTOR_H

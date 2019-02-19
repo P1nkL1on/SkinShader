@@ -192,14 +192,18 @@ void EsCalculatorHelp::testRandom3Model(QPainter *qp, EsDrawer *dr)
     const QVector<Matrix2d> vertTs =
             transformOfEdgesForEachVertex(v, v2, vt, s, st);
     const int textureSize = 120;
-    PlaneVector D = PlaneVector("test.jpg");
+    PlaneVector D = PlaneVector("test.png");
+    if (D.width() == 0){
+        cout << "Error in loading!" << endl;
+        return;
+    }
     D = D.changeSize(textureSize, textureSize, 2);
     PlaneVector Dsmooth = EsTexturer::applyInterpolatedTransforms(D, vertTs, vt, st);
     p.paint(qp, D, 425, 25);
     p.paint(qp, Dsmooth, 445 + textureSize * p.mash, 25);
 
 
-//    return;
+    return;
 
 
 

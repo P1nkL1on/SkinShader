@@ -4,6 +4,12 @@
 
 #include "qdebug.h"
 
+PlaneVector::PlaneVector()
+{
+    m_width = 0;
+    m_height = 0;
+}
+
 PlaneVector::PlaneVector(const int width, const int height)
 {
     m_values = std::vector<double>(width * height);

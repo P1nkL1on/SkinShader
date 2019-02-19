@@ -1,8 +1,4 @@
 #include "planevectordrawer.h"
-PlaneVectorDrawer::PlaneVectorDrawer()
-{
-
-}
 
 void PlaneVectorDrawer::paint(QPainter *qp, const PlaneVector &vec, const int x, const int y) const
 {
@@ -15,7 +11,7 @@ void PlaneVectorDrawer::paint(QPainter *qp, const PlaneVector &vec, const int x,
 
 QImage PlaneVectorDrawer::paint(const PlaneVector &vec) const
 {
-    QImage q = QImage(vec.width(), vec.height(), QImage::Format_ARGB32_Premultiplied);
+    QImage q = QImage(vec.width(), vec.height(), QImage::Format_ARGB32);
     for (int i = 0; i < vec.width(); ++i)
         for (int j = 0; j < vec.height(); ++j)
             q.setPixelColor(i, j, transformValueToColor(vec.getValue(i, j)));

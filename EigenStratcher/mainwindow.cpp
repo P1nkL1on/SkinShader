@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 
 #include <qpainter.h>
+#include <QFileDialog>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,10 +21,8 @@ MainWindow::~MainWindow()
 void MainWindow::paintEvent(QPaintEvent *e)
 {
     QPainter qp(this);
-    //d.drawModel(&qp, t);
-//    c.test0();
-//    c.test(&qp, &d);
-    EsCalculatorHelp::testRandom3Model(&qp, &d);
+    //EsCalculatorHelp::testRandom3Model(&qp, &d);
+    processer->drawSelf(&qp);
     qp.end();
 }
 
@@ -30,4 +30,35 @@ void MainWindow::runTests() const
 {
     EsCalculatorTests esCTests;
     QTest::qExec(&esCTests);
+}
+
+void MainWindow::on_actionLoad_Texture_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "../../../", "Images (*.png *.xpm *.jpg)");
+    if (fileName.isEmpty())
+        return;
+    const bool success = processer->loadTexture(fileName);
+    qDebug() << (success? "Texture loaded successfully!" : ("Error in loading " + fileName));
+    if (success)
+        processer->scaleNormallyToMax(200);
+}
+
+void MainWindow::on_actionLoad_Model_triggered()
+{
+
+}
+
+void MainWindow::on_actionLoad_Stretched_Model_triggered()
+{
+
+}
+
+void MainWindow::on_actionSave_Stretched_Texture_triggered()
+{
+
+}
+
+void MainWindow::on_actionStretch_Texture_triggered()
+{
+    processer->stretchTexture();
 }
