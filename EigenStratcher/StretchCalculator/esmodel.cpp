@@ -45,3 +45,8 @@ QVector<int> EsModel::st() const
 {
     return m_st;
 }
+
+void EsModel::setV(const QVector<Vector3d> &newV)
+{
+    m_v = newV;
+}

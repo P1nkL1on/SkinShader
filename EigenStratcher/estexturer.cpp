@@ -27,6 +27,12 @@ PlaneVector EsTexturer::applyInterpolatedTransforms(
     const int skipPixels = 0;
     const int stretchBoost = .0;
 
+    const bool debugTime = true;
+    const int totalPixels = w * h;
+    const int stepPercentProgress = 10;
+    int pixelsDoneCount = 0;
+    int percentProgress = 0;
+
     for (int i = 0; i < w; i += skipPixels + 1){
         for (int j = 0; j < h; j += skipPixels + 1){
             // detect which UV polygon contains (i,j);
@@ -63,20 +69,52 @@ PlaneVector EsTexturer::applyInterpolatedTransforms(
             Scol0x.setValue(S.col(0)(0,0), i, j);
             Scol0y.setValue(S.col(0)(1,0), i, j);
             //result.setValue(getPixelValueAfterStretching(texture, i, j, rs + stretchBoost, S.col(0)), i, j);
+            // progress message
+            if (!debugTime)
+                continue;
+            ++pixelsDoneCount;
+            const int currentPercentProgress = int(pixelsDoneCount * 100.0 / totalPixels);
+            if (currentPercentProgress > percentProgress + stepPercentProgress){
+                percentProgress += stepPercentProgress;
+                qDebug() << "Calculated " << percentProgress << "% pixels (" << pixelsDoneCount << "/" << totalPixels << ")";
+            }
         }
     }
+    qDebug() << "Calculated ALL per pixel transformations";
+    pixelsDoneCount = percentProgress = 0;
     // stretch
     for (int i = 0; i < w; ++i)
-        for (int j = 0; j < h; ++j)
+        for (int j = 0; j < h; ++j){
             tmpResult.setValue(getPixelValueAfterStretching(texture, i, j,
             rsMap.getValue(i, j), mk2d(Scol0x.getValue(i, j), Scol0y.getValue(i, j))),
             i, j);
+            if (!debugTime)
+                continue;
+            ++pixelsDoneCount;
+            const int currentPercentProgress = int(pixelsDoneCount * 100.0 / totalPixels);
+            if (currentPercentProgress > percentProgress + stepPercentProgress){
+                percentProgress += stepPercentProgress;
+                qDebug() << "Stretched " << percentProgress << "% pixels (" << pixelsDoneCount << "/" << totalPixels << ")";
+            }
+        }
+    qDebug() << "Stretch applied!";
+    pixelsDoneCount = percentProgress = 0;
     // compress
     for (int i = 0; i < w; ++i)
-        for (int j = 0; j < h; ++j)
+        for (int j = 0; j < h; ++j){
             result.setValue(getPixelValueAfterStretching(tmpResult, i, j,
             rtMap.getValue(i, j), mk2d(Scol0y.getValue(i, j), Scol0x.getValue(i, j))),
             i, j);
+            if (!debugTime)
+                continue;
+            ++pixelsDoneCount;
+            const int currentPercentProgress = int(pixelsDoneCount * 100.0 / totalPixels);
+            if (currentPercentProgress > percentProgress + stepPercentProgress){
+                percentProgress += stepPercentProgress;
+                qDebug() << "Compressed " << percentProgress << "% pixels (" << pixelsDoneCount << "/" << totalPixels << ")";
+            }
+        }
+    qDebug() << "Compression applied!";
 
     return result;
 }

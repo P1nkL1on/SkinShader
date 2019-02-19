@@ -20,6 +20,7 @@ public:
     QVector<int> s() const;
     QVector<int> st() const;
 
+    void setV(const QVector<Eigen::Vector3d> &newV);
 private:
     QVector<Eigen::Vector3d> m_v;
     QVector<Eigen::Vector2d> m_vt;

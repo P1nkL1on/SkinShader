@@ -17,6 +17,8 @@ namespace EsCalculatorHelp{
     void testRandomTriangleWithPainting(QPainter *qp, EsDrawer *dr);
     void testRandom2TriangleWithPainting(QPainter *qp, EsDrawer *dr);
     void testRandom3Model(QPainter *qp, EsDrawer *dr);
+    EsModel* testModel1();
+    EsModel* testModelRandomBend(const EsModel &model);
 }
 
 #endif // ESCALCULATORHELP_H

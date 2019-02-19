@@ -14,6 +14,9 @@ private:
     PlaneVector loadedTexture;
     PlaneVector stretchedTexture;
 
+    EsModel *originalModel = nullptr;
+    EsModel *strethedModel = nullptr;
+
     QImage loadedTextureImage;
     QImage stretchedTextureImage;
 
@@ -24,6 +27,7 @@ private:
     void savePath(QString &path);
 public:
     EsProcesser() = default;
+    ~EsProcesser();
     bool isTexuteLoaded() const;
     bool isStretchedTextureExist() const;
     bool isModelLoaded() const;
@@ -32,6 +36,8 @@ public:
     bool loadTexture(const QString &path);
     bool loadModel(const QString &path);
     bool loadStretchedModel(const QString &path);
+    void loadModel(EsModel *model);
+    void loadStretchedModel(EsModel *model);
 
     void scaleNormallyToMax(const int newMax);
     void scaleLoadedTexture(const double newScale);

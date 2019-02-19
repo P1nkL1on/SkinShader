@@ -301,3 +301,25 @@ Matrix3d EsCalculatorHelp::makeMatrixFromVectors2D(const Vector2d &dot0, const V
     mat << dot0(0,0), dot1(0,0), dot2(0,0),  dot0(1,0), dot1(1,0), dot2(1,0), 0,0,0;
     return mat;
 }
+
+EsModel *EsCalculatorHelp::testModel1()
+{
+    const QVector<Vector3d> v = {makeVector3D(.2, .2, .15), makeVector3D(.2, -4.0, .15), makeVector3D(2.6, .2, .15),
+                                 makeVector3D(2.6, -4.0, .15), makeVector3D(4.0, .2, .15)};
+    const QVector<Vector2d> vt = {makeVector2D(.0, .0), makeVector2D(.0, 1.0), makeVector2D(.6, .0),makeVector2D(.6, 1.0), makeVector2D(1.0, .0)};
+
+    const QVector<int> s = {0,2, 1,  2, 3, 1,  4, 3, 2};
+    const QVector<int> st = {0,2, 1,  2, 3, 1,  4, 3, 2};
+
+    return new EsModel(v, vt, s, st);
+}
+
+EsModel *EsCalculatorHelp::testModelRandomBend(const EsModel &model)
+{
+    QVector<Vector3d> vOrig = model.v();
+    for (int i = 0; i < vOrig.length(); ++i){
+        vOrig[i] += makeVector3D(5.0, .0, .0) + MatrixXd::Random(3, 1) * .5;
+    }
+
+    return new EsModel(vOrig, model.vt(), model.s(), model.st());
+}

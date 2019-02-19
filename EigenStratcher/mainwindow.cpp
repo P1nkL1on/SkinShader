@@ -40,25 +40,27 @@ void MainWindow::on_actionLoad_Texture_triggered()
     const bool success = processer->loadTexture(fileName);
     qDebug() << (success? "Texture loaded successfully!" : ("Error in loading " + fileName));
     if (success)
-        processer->scaleNormallyToMax(200);
+        processer->scaleNormallyToMax(900);
 }
 
 void MainWindow::on_actionLoad_Model_triggered()
 {
-
+    processer->loadModel(model);
+    qDebug() << "Model loaded successfully!";
 }
 
 void MainWindow::on_actionLoad_Stretched_Model_triggered()
 {
-
+    processer->loadStretchedModel(model2);
+    qDebug() << "Stretched model loaded successfully!";
 }
 
 void MainWindow::on_actionSave_Stretched_Texture_triggered()
 {
-
 }
 
 void MainWindow::on_actionStretch_Texture_triggered()
 {
     processer->stretchTexture();
+    repaint();
 }

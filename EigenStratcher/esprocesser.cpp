@@ -1,5 +1,8 @@
 #include "esprocesser.h"
 #include "qdebug.h"
+
+using namespace Eigen;
+
 QImage EsProcesser::redrawImage(const PlaneVector &vec) const
 {
     if (isPlaneVectorEmpty(vec))
@@ -27,6 +30,14 @@ void EsProcesser::savePath(QString &path)
     lastUsedPath = path.mid(0, path.lastIndexOf('/') + 1);
 }
 
+EsProcesser::~EsProcesser()
+{
+    if (isModelLoaded())
+        delete originalModel;
+    if (isStretchedModelLoaded())
+        delete strethedModel;
+}
+
 bool EsProcesser::isTexuteLoaded() const
 {
     return !isPlaneVectorEmpty(loadedTexture);
@@ -35,6 +46,16 @@ bool EsProcesser::isTexuteLoaded() const
 bool EsProcesser::isStretchedTextureExist() const
 {
     return !isPlaneVectorEmpty(stretchedTexture);
+}
+
+bool EsProcesser::isModelLoaded() const
+{
+    return originalModel != nullptr;
+}
+
+bool EsProcesser::isStretchedModelLoaded() const
+{
+    return strethedModel != nullptr;
 }
 
 bool EsProcesser::loadTexture(const QString &path)
@@ -48,11 +69,23 @@ bool EsProcesser::loadTexture(const QString &path)
     return true;
 }
 
+void EsProcesser::loadModel(EsModel *model)
+{
+    if (model != nullptr)
+        originalModel = model;
+}
+
+void EsProcesser::loadStretchedModel(EsModel *model)
+{
+    if (model != nullptr)
+        strethedModel = model;
+}
+
 void EsProcesser::scaleNormallyToMax(const int newMax)
 {
     if (!isTexuteLoaded())
         return;
-    double k = 1.0 * newMax / (std::max(loadedTexture.width(), loadedTexture.height()));
+    double k = 1.0 * newMax / (std::min(loadedTexture.width(), loadedTexture.height()));
     scaleLoadedTexture(k);
 }
 
@@ -72,9 +105,37 @@ void EsProcesser::scaleLoadedTexture(const double newScale)
 
 void EsProcesser::stretchTexture()
 {
-    if (!isTexuteLoaded())
+    stretchedTextureImage = clearImage();
+    if (!isTexuteLoaded()){
+        qDebug() << "No texture loaded!";
         return;
-    stretchedTexture = PlaneVector::testPlaneVector(loadedTexture.width(), loadedTexture.height());
+    }
+    if (!isModelLoaded()){
+        qDebug() << "No model loaded!";
+        stretchedTexture = PlaneVector::testPlaneVector(loadedTexture.width(), loadedTexture.height());
+        return;
+    }
+    if (!isStretchedModelLoaded()){
+        qDebug() << "No stretched model loaded!";
+        stretchedTexture = loadedTexture;
+        return;
+    }
+
+    const QVector<Matrix2d> vertTs =
+            EsCalculator::transformOfEdgesForEachVertex(
+                originalModel->v(),
+                strethedModel->v(),
+                originalModel->vt(),
+                originalModel->s(),
+                originalModel->st());
+    qDebug() << "Each vertex Stretch Axes and Transforms calculated!";
+    stretchedTexture =
+            EsTexturer::applyInterpolatedTransforms(
+                loadedTexture,
+                vertTs,
+                originalModel->vt(),
+                originalModel->st());
+    qDebug() << "Texture changes applied!";
 }
 
 QImage EsProcesser::getLoadedTexture()

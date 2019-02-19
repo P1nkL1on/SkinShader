@@ -55,15 +55,24 @@
    <property name="text">
     <string>Load Texture</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
   </action>
   <action name="actionLoad_Model">
    <property name="text">
     <string>Load Model</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
   </action>
   <action name="actionLoad_Stretched_Model">
    <property name="text">
     <string>Load Stretched Model</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
    </property>
   </action>
   <action name="actionSave_Stretched_Texture">
@@ -74,6 +83,9 @@
   <action name="actionStretch_Texture">
    <property name="text">
     <string>Stretch Texture</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Space</string>
    </property>
   </action>
  </widget>

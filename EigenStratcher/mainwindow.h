@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include "StretchCalculator/escalculatortests.h"
 #include "esprocesser.h"
+
+#include "escalculatorhelp.h"
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -21,6 +25,9 @@ private:
 
     Ui::MainWindow *ui;
     EsProcesser *processer = new EsProcesser();
+
+    EsModel *model = EsCalculatorHelp::testModel1();
+    EsModel *model2 = EsCalculatorHelp::testModelRandomBend(*model);
 protected:
     void paintEvent(QPaintEvent *e);
 private slots:
